@@ -29,6 +29,6 @@ distribution = true
 runserver = "python3 manage.py runserver"
 makemigrations = "python3 manage.py makemigrations"
 migrate = "python3 manage.py migrate"
-newMasterMan = "django-admin createsuperuser"
+newMasterMan ="python3 manage.py createsuperuser"
 newApp = "django-admin startapp"
 newProject = "django-admin startproject"
