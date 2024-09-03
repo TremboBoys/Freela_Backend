@@ -12,3 +12,8 @@ class User(models.Model):
     class Meta:
         verbose_name = "User"
         verbose_name_plural = "User"
+
+class EmailVerified(models.Model):
+    email = models.EmailField(unique=True)
+    token = models.CharField(max_length=6)
+    created_at = models.DateTimeField(auto_now_add=True)

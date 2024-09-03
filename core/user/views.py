@@ -1,9 +1,10 @@
-from rest_framework.viewsets import ModelViewSet
-from core.user.serializer import UserSerializer
-from core.user.models import User
 
-class UserView(ModelViewSet):
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
+from rest_framework.views import APIView
 
-
+class UserAPIView(APIView):
+    def post(self, request):
+        data = request.data
+        email = data['email']
+        password = data['password']
+        code = data['code']
+        
