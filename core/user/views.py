@@ -1,31 +1,40 @@
-from rest_framework.viewsets import ModelViewSet
+from rest_framework.views import APIView
 from core.user.models import User
-from core.user.serializer import UserSerializer
 from rest_framework.response import Response
 from rest_framework import status
-from rest_framework.decorators import action
+from core.user.models import EmailVerification
+from django.contrib.auth.hashers import make_password
+from django.db.utils import IntegrityError
 
-class UserView(ModelViewSet):
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
-
-    def create(self, request, *args, **kwargs):
-        response = super().create(request, *args, **kwargs)
-        return Response({"message": "Email foi enviado com sucesso!"}, status=status.HTTP_201_CREATED)
-    
-    @action(detail=False, methods=['post'])
-    def confirm_email(self, request):
+class UserAPIView(APIView):
+    def post(self, request):
         email = request.data.get('email')
-        token = request.data.get('token')
-        try:
-            user = User.objects.get(email=email)
-            if user.confirmation_token == token:
-                user.is_active = True
-                user.confirmation_token = None
-                user.save()
-                return Response({"message": "Email confirmado com sucesso!"}, status=status.HTTP_201_CREATED)
-            else:
-                return Response({"Error!": "Token inválido!"}, status=status.HTTP_400_BAD_REQUEST)
-        except User.DoesNotExist:
-            return Response({"message": "User not found!"}, status=status.HTTP_404_NOT_FOUND)
+        username = request.data.get('username')
+        name = request.data.get('name')
+        password = request.data.get('password')
+        code = request.data.get('code')
+
+        if not email or not password:
+            return Response({'message': "Email and password are required"}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Verificando se o código de verificação está correto
+        email_verification = EmailVerification.objects.filter(email=email, code=code).first()
+
+        if email_verification:
+            # Verificando se o email já está registrado
+            if User.objects.filter(email=email).exists():
+                return Response({'message': "Email is already registered"}, status=status.HTTP_400_BAD_REQUEST)
+            
+            try:
+                # Usando make_password para fazer o hash da senha
+                hashed_password = make_password(password)
+                new_user = User.objects.create(email=email, username=username, name=name, password=hashed_password)
+                new_user.save()
+                email_verification.delete()  # Deletando o código de verificação após a criação do usuário
+                return Response({"message": "User created!"}, status=status.HTTP_201_CREATED)
+            except IntegrityError:
+                return Response({"message": "A user with this email already exists"}, status=status.HTTP_400_BAD_REQUEST)
+        
+        return Response({"message": "Invalid verification code or email"}, status=status.HTTP_400_BAD_REQUEST)
+
         
