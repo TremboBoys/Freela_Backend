@@ -12,6 +12,8 @@ dependencies = [
     "djangorestframework-simplejwt>=5.3.1",
     "passage>=0.2.4",
     "simplejwt>=2.0.1",
+    "dj-rest-auth>=6.0.0",
+    "django-allauth>=64.2.0",
 ]
 requires-python = ">=3.11"
 readme = "README.md"

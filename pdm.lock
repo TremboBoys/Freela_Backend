@@ -5,7 +5,7 @@
 groups = ["default"]
 strategy = ["inherit_metadata"]
 lock_version = "4.5.0"
-content_hash = "sha256:d61e08de76219bb0a2992fd973c4b778cca0554a20c00bab82a912165af4518d"
+content_hash = "sha256:3fda502b82fa17fb5ee19d719de48879906d4ecb29c9424b9411b1ff71203899"
 
 [[metadata.targets]]
 requires_python = ">=3.11"
@@ -25,6 +25,20 @@ files = [
 ]
 
 [[package]]
+name = "dj-rest-auth"
+version = "6.0.0"
+requires_python = ">=3.8"
+summary = "Authentication and Registration in Django Rest Framework"
+groups = ["default"]
+dependencies = [
+    "Django<6.0,>=3.2",
+    "djangorestframework>=3.13.0",
+]
+files = [
+    {file = "dj-rest-auth-6.0.0.tar.gz", hash = "sha256:760b45f3a07cd6182e6a20fe07d0c55230c5f950167df724d7914d0dd8c50133"},
+]
+
+[[package]]
 name = "django"
 version = "5.1.1"
 requires_python = ">=3.10"
@@ -38,6 +52,19 @@ dependencies = [
 files = [
     {file = "Django-5.1.1-py3-none-any.whl", hash = "sha256:71603f27dac22a6533fb38d83072eea9ddb4017fead6f67f2562a40402d61c3f"},
     {file = "Django-5.1.1.tar.gz", hash = "sha256:021ffb7fdab3d2d388bc8c7c2434eb9c1f6f4d09e6119010bbb1694dda286bc2"},
+]
+
+[[package]]
+name = "django-allauth"
+version = "64.2.0"
+requires_python = ">=3.8"
+summary = "Integrated set of Django applications addressing authentication, registration, account management as well as 3rd party (social) account authentication."
+groups = ["default"]
+dependencies = [
+    "Django>=4.2",
+]
+files = [
+    {file = "django_allauth-64.2.0.tar.gz", hash = "sha256:71b404b3a7631502005e549800411e77939754e6864f2d24c17741a42e8e50e5"},
 ]
 
 [[package]]
