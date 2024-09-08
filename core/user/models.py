@@ -20,3 +20,9 @@ class EmailVerification(models.Model):
     code = models.CharField(max_length=6)
     created_at = models.DateTimeField(auto_now_add=True)
 
+class ForgetPassword(models.Model):
+    email = models.EmailField(max_length=45)
+    token = models.CharField(max_length=45)
+
+    def __str__(self):
+        return self.token
