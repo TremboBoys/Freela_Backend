@@ -33,5 +33,29 @@ class UserAPIView(APIView):
                 return Response({"message": "A user with this email already exists"}, status=status.HTTP_400_BAD_REQUEST)
         
         return Response({"message": "Invalid verification code or email"}, status=status.HTTP_400_BAD_REQUEST)
+    
+    def put(self, request):
+        email = request.data.get('email')
+        password = request.data.get('password')
+        code = request.data.get('token')
 
-        
+        if not email or not password or not code:
+            return Response({"message": "Email, password, and token are required"}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            user = User.objects.get(email=email)
+        except User.DoesNotExist:
+            return Response({"message": "User not found"}, status=status.HTTP_404_NOT_FOUND)
+
+        email_verification = EmailVerification.objects.filter(email=email, code=code).first()
+        if not email_verification:
+            return Response({"message": "Invalid token"}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            user.password = make_password(password=password)
+            user.save()
+            email_verification.delete()
+            return Response({"message": "Password updated"}, status=status.HTTP_200_OK)
+        except Exception as error:
+            return Response({"message": str(error)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
