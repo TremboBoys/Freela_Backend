@@ -17,20 +17,17 @@ class UserAPIView(APIView):
         if not email or not password:
             return Response({'message': "Email and password are required"}, status=status.HTTP_400_BAD_REQUEST)
 
-        # Verificando se o código de verificação está correto
         email_verification = EmailVerification.objects.filter(email=email, code=code).first()
 
         if email_verification:
-            # Verificando se o email já está registrado
             if User.objects.filter(email=email).exists():
                 return Response({'message': "Email is already registered"}, status=status.HTTP_400_BAD_REQUEST)
             
             try:
-                # Usando make_password para fazer o hash da senha
                 hashed_password = make_password(password)
                 new_user = User.objects.create(email=email, username=username, name=name, password=hashed_password)
                 new_user.save()
-                email_verification.delete()  # Deletando o código de verificação após a criação do usuário
+                email_verification.delete() 
                 return Response({"message": "User created!"}, status=status.HTTP_201_CREATED)
             except IntegrityError:
                 return Response({"message": "A user with this email already exists"}, status=status.HTTP_400_BAD_REQUEST)
