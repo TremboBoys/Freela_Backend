@@ -5,6 +5,8 @@ class User(models.Model):
     username = models.CharField(max_length=45)
     email = models.EmailField(max_length=45, unique=True)
     password= models.CharField(max_length=45)
+    confirmation_token = models.CharField(max_length=6, blank=True, null=True)
+    is_active = models.BooleanField(default=False) 
 
     def __str__(self) -> str:
         return f"{self.name}  - {self.username} - {self.password}"
@@ -12,6 +14,11 @@ class User(models.Model):
     class Meta:
         verbose_name = "User"
         verbose_name_plural = "User"
+
+class EmailVerification(models.Model):
+    email = models.EmailField(unique=True)
+    code = models.CharField(max_length=6)
+    created_at = models.DateTimeField(auto_now_add=True)
 
 class ForgetPassword(models.Model):
     email = models.EmailField(max_length=45)
