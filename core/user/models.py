@@ -12,3 +12,10 @@ class User(models.Model):
     class Meta:
         verbose_name = "User"
         verbose_name_plural = "User"
+
+class ForgetPassword(models.Model):
+    email = models.EmailField(max_length=45)
+    token = models.CharField(max_length=45)
+
+    def __str__(self):
+        return self.token
