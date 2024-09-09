@@ -63,3 +63,26 @@ class UserAPIView(APIView):
         data = request.data
         code = data['code']
         email = data['email']
+        email_for_update = data['email_update']
+        if not email or not code:
+            return Response({"message": "Code or email are required"}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            user = User.objects.get(email=email)
+        except User.DoesNotExist:
+            return Response({"message": "User not found"}, status=status.HTTP_404_NOT_FOUND)
+        
+        email_verification = EmailVerification.objects.filter(code=code, email=email).first()
+
+        if not email_verification:
+            return Response({"message": "User not found in email_verification"}, status=status.HTTP_404_NOT_FOUND)
+
+        try:
+            user.email = email_for_update
+            user.save()
+            email_verification.delete()
+            return Response({"message": "Email update!"}, status=status.HTTP_201_CREATED)
+        except Exception as error:
+            return Response({"message": f"Internal server error: {error}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        
+            
