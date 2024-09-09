@@ -31,6 +31,7 @@ INSTALLED_APPS = [
     'corsheaders',     
     'simplejwt',
     'core.user',
+    'core.perfil',
     
     
 ]
