@@ -1,3 +1,7 @@
-from django.shortcuts import render
+from core.perfil.models import CategoriaFreelancer
+from core.perfil.serializer import CategoriaFreelancerSerializer
+from rest_framework.viewsets import ModelViewSet
 
-# Create your views here.
+class CategoriaFreelancerViewSet(ModelViewSet):
+    queryset = CategoriaFreelancer.objects.all()
+    serializer_class = CategoriaFreelancerSerializer
