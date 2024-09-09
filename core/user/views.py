@@ -58,4 +58,8 @@ class UserAPIView(APIView):
             return Response({"message": "Password updated"}, status=status.HTTP_200_OK)
         except Exception as error:
             return Response({"message": str(error)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
+    
+    def patch(self, request):
+        data = request.data
+        code = data['code']
+        email = data['email']
