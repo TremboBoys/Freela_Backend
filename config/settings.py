@@ -32,6 +32,7 @@ INSTALLED_APPS = [
     'simplejwt',
     'core.user',
     'core.perfil',
+    'core.projects'
     
     
 ]
