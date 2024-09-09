@@ -25,7 +25,7 @@ class Project(models.Model):
         MEDIUM = 2, "1000 - 5000"
         BIG = 3, "5000 - 10000"
         GIANT = 4, "10001 - 10000000000000000000000"
-    budget = models.IntegerField(("Budget"), choices=Budget.choices, defaul=Budget.MEDIUM)
+    budget = models.IntegerField(("Budget"), choices=Budget.choices, default=Budget.MEDIUM)
 
     class Size(models.IntegerChoices):
         SMALL = 1, "Small"
@@ -34,5 +34,7 @@ class Project(models.Model):
         GIANT = 4, "Giant"
 
     size = models.IntegerField(("Size"),choices=Size.choices, default=Size.MEDIUM)
+
+
     
 
