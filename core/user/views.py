@@ -17,24 +17,45 @@ class UserAPIView(APIView):
         if not email or not password:
             return Response({'message': "Email and password are required"}, status=status.HTTP_400_BAD_REQUEST)
 
-        # Verificando se o código de verificação está correto
         email_verification = EmailVerification.objects.filter(email=email, code=code).first()
 
         if email_verification:
-            # Verificando se o email já está registrado
             if User.objects.filter(email=email).exists():
                 return Response({'message': "Email is already registered"}, status=status.HTTP_400_BAD_REQUEST)
             
             try:
-                # Usando make_password para fazer o hash da senha
                 hashed_password = make_password(password)
                 new_user = User.objects.create(email=email, username=username, name=name, password=hashed_password)
                 new_user.save()
-                email_verification.delete()  # Deletando o código de verificação após a criação do usuário
+                email_verification.delete() 
                 return Response({"message": "User created!"}, status=status.HTTP_201_CREATED)
             except IntegrityError:
                 return Response({"message": "A user with this email already exists"}, status=status.HTTP_400_BAD_REQUEST)
         
         return Response({"message": "Invalid verification code or email"}, status=status.HTTP_400_BAD_REQUEST)
+    
+    def put(self, request):
+        email = request.data.get('email')
+        password = request.data.get('password')
+        code = request.data.get('token')
 
-        
+        if not email or not password or not code:
+            return Response({"message": "Email, password, and token are required"}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            user = User.objects.get(email=email)
+        except User.DoesNotExist:
+            return Response({"message": "User not found"}, status=status.HTTP_404_NOT_FOUND)
+
+        email_verification = EmailVerification.objects.filter(email=email, code=code).first()
+        if not email_verification:
+            return Response({"message": "Invalid token"}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            user.password = make_password(password=password)
+            user.save()
+            email_verification.delete()
+            return Response({"message": "Password updated"}, status=status.HTTP_200_OK)
+        except Exception as error:
+            return Response({"message": str(error)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+

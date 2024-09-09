@@ -6,8 +6,7 @@ class UserSerializer(ModelSerializer):
         model = User
         fields = "__all__"
         extra_kwargs = {
-            'confirmation_token': {'write_only': True},
-            'is_active': {'read_only': True}
+            'code': {'write_only': True},
         }
         
     
