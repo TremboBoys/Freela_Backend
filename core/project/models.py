@@ -1,5 +1,5 @@
 from django.db import models
-
+from core.user.models import User
 class Project(models.Model):
     area = models.CharField(max_length=45)
     sub_area = models.CharField(max_length=45)
@@ -11,6 +11,7 @@ class Project(models.Model):
     nivel_development = models.CharField(max_length=45)
     need_api_integration = models.CharField(max_length=45)
     need_frameworks = models.CharField(max_length=45)
+    crontractor = models.ForeignKey(User, on_delete=models.PROTECT, related_name="contractor")
 
     class NivelExperience(models.IntegerChoices):
         INICIANTE = 1, "Iniciante"
