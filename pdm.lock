@@ -5,7 +5,7 @@
 groups = ["default"]
 strategy = ["inherit_metadata"]
 lock_version = "4.5.0"
-content_hash = "sha256:b38b83fbfb2722ab1270116c074624a9f366435670e180b396efeebbc2a1c26b"
+content_hash = "sha256:28272030e978f27fb8ef2b672059c10e5796307bd2721bb26da2c65c3becfb3e"
 
 [[metadata.targets]]
 requires_python = ">=3.11"
@@ -207,6 +207,7 @@ version = "0.4.27"
 requires_python = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*"
 summary = "File type identification using libmagic"
 groups = ["default"]
+marker = "sys_platform == \"linux\""
 files = [
     {file = "python-magic-0.4.27.tar.gz", hash = "sha256:c1ba14b08e4a5f5c31a302b7721239695b2f0f058d125bd5ce1ee36b9d9d3c3b"},
     {file = "python_magic-0.4.27-py2.py3-none-any.whl", hash = "sha256:c212960ad306f700aa0d01e5d7a325d20548ff97eb9920dcd29513174f0294d3"},
