@@ -1,38 +1,20 @@
-from django.db import models
-from core.project.models import Project
 from core.user.models import User
+from django.db import models
 
-class CategoriaFreelancer(models.Model):
-    name = models.CharField(max_length=45)
-    
-    def __str__(self):
-        return self.name
-    
-class MyProject(models.Model):
-    project = models.ForeignKey(Project, on_delete=models.CASCADE)
-    
-    class Status(models.IntegerChoices):
-        PENDING = 1, "Pending"
-        FINSHED = 2, "Finished"
-    status = models.IntegerField(('status'), choices=Status.choices, default=Status.PENDING)
-    term = models.DateTimeField()
-    
-class Hability(models.Model):
-    hability = models.CharField(max_length=45)
-
-class MyHability(models.Model):
-    user_hability = models.ForeignKey(Hability, on_delete=models.PROTECT)
-    user = models.ForeignKey(User, on_delete=models.PROTECT)
-class Perfil(models.Model):
-    balance = models.CharField(max_length=45)
-    user = models.ForeignKey(User, on_delete=models.PROTECT)
-    price_per_hour = models.DecimalField(decimal_places=2, max_digits=9999999999999999)
-    is_public = models.BooleanField(default=True)
-    about_me = models.CharField(max_length=255)
-    category_Feelance = models.ForeignKey(CategoriaFreelancer, on_delete=models.PROTECT)
+class Nacionality(models.Model):
+    name = models.CharField(max_length=45);
 
     def __str__(self) -> str:
-        return f"{self.balance} - {self.about_me}"
-
-
-
+        return self.name
+    
+class Perfil(models.Model):
+    is_public = models.BooleanField(default=True)
+    user = models.ForeignKey(User.email, on_delete=models.PROTECT)
+    price_per_hour = models.DecimalField(decimal_places=2, max_digits=20)
+    nacionality = models.ForeignKey(Nacionality, on_delete=models.PROTECT)
+    class PaymentType(models.IntegerChoices):
+        PIX = 1, "Pix"
+        DEBITO = 2, "Debito"
+        CREDITO = 3, "Credito"
+    payment_type = models.IntegerChoices(("Payment type"), choices=PaymentType.choices, default=PaymentType.PIX)
+    
