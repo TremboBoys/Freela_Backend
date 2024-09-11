@@ -24,6 +24,8 @@ class PerfilView(ModelViewSet):
                 from_email=from_email
             )
 
+    
+
 class ProView(ModelViewSet):
     queryset = Pro.objects.all()
     serializer_class = ProSerializer
@@ -51,4 +53,9 @@ class MyProjectsView(ModelViewSet):
 class MyCompetencyView(ModelViewSet):
     queryset = MyCompetency.objects.all()
     serializer_class = MyCompetencySerializer
+
+    @receiver(post_save, sender=MyCompetency)
+    def terminateMyProject(sender, instance, created, **kwargs):
+        message = "Seu projeto foi terminado!"
+        pass
 

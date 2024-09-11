@@ -57,7 +57,8 @@ class MyCompetency(models.Model):
     
 class MyProjects(models.Model):
     in_execution = models.BooleanField(default=True)
-    perfil = models.ForeignKey(Perfil, on_delete=models.CASCADE)
+    perfil = models.ForeignKey(Perfil, on_delete=models.CASCADE, related_name="perfil")
+    project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name="project")
 class Pro(models.Model):
     perfil = models.ForeignKey(Perfil, on_delete=models.CASCADE)
     become_pro = models.DateField()
