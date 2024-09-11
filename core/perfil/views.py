@@ -1,10 +1,12 @@
 from rest_framework.viewsets import ModelViewSet 
 from core.perfil.serializer import PerfilSerializer, ProSerializer, MyCompetencySerializer, MyProjectSerializer, NacionalitySerializer, AreaSerializer,SubAreaSerializer, HabilitySerializer
-from django.db.models.signals import post_save
+from django.db.models.signals import post_save, pre_save
 from django.dispatch import receiver
 from django.core.mail import send_mail
 from core.perfil.models import Perfil, Pro, MyProjects, MyCompetency, Hability, Area, SubArea, Nacionality
 from core.user.models import User
+from rest_framework.response import Response
+from rest_framework import status
 
 class PerfilView(ModelViewSet):
     queryset = Perfil.objects.all()
@@ -54,8 +56,20 @@ class MyCompetencyView(ModelViewSet):
     queryset = MyCompetency.objects.all()
     serializer_class = MyCompetencySerializer
 
-    @receiver(post_save, sender=MyCompetency)
+    @receiver(pre_save, sender=MyCompetency)
     def terminateMyProject(sender, instance, created, **kwargs):
-        message = "Seu projeto foi terminado!"
-        pass
 
+        message = "Seu projeto foi terminado!" 
+        subject = f"O projeto {instance.project.title} está finalizado"
+        from_email = "martinsbarroskaua@gmail.com"
+        recipient_list = [instance.project.contractor.email]
+        try:
+            send_mail (
+                message=message,
+                subject=subject,
+                from_email=from_email,
+                recipient_list=recipient_list
+            )
+        except BaseException as error:
+            return Response({"message": f"Internal server error: {error}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        
