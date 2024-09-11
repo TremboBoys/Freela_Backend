@@ -56,20 +56,11 @@ class MyCompetencyView(ModelViewSet):
     queryset = MyCompetency.objects.all()
     serializer_class = MyCompetencySerializer
 
-    @receiver(pre_save, sender=MyCompetency)
-    def terminateMyProject(sender, instance, created, **kwargs):
+    def update(self, request, *args, **kwargs):
+        instance = self.get_object()
+        finished_project = instance.in_execution
 
-        message = "Seu projeto foi terminado!" 
-        subject = f"O projeto {instance.project.title} está finalizado"
-        from_email = "martinsbarroskaua@gmail.com"
-        recipient_list = [instance.project.contractor.email]
-        try:
-            send_mail (
-                message=message,
-                subject=subject,
-                from_email=from_email,
-                recipient_list=recipient_list
-            )
-        except BaseException as error:
-            return Response({"message": f"Internal server error: {error}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-        
+        response = super().update(request, *args, **kwargs)
+
+        if finished_project and not instance.in_execution:
+            subject = f"O projeto {instance.project.title}"
