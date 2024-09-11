@@ -10,10 +10,10 @@ class PerfilView(ModelViewSet):
     queryset = Perfil.objects.all()
     serializer_class = PerfilSerializer
 
-    """@receiver(post_save, sender=Perfil)
-    def sendEmailUpdate(sender, request, instance, created, **kwargs):
-        message = request.POST.get("message", "Seu perfil foi alterado")
-        subject = request.POST.get("subject", f"Olá {instance.user.name}!, se perfil sofreu algumas alterações!")
+    @receiver(post_save, sender=Perfil)
+    def sendEmailUpdate(sender, instance, created, **kwargs):
+        message = "Seu perfil foi alterado"
+        subject = f"Olá {instance.user.name}!, se perfil sofreu algumas alterações!"
         recipient_list = [instance.user.email]
         from_email = "martinsbarroskaua85@gmail.com"
         if not created:
@@ -22,7 +22,7 @@ class PerfilView(ModelViewSet):
                 subject=subject,
                 recipient_list=recipient_list,
                 from_email=from_email
-            )"""
+            )
 
 class ProView(ModelViewSet):
     queryset = Pro.objects.all()
