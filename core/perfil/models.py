@@ -20,7 +20,7 @@ class Area(models.Model):
     def __str__(self) -> str:
         return self.name
 class SubArea(models.Model):
-    area = models.ForeignKey(Area, on_delete=models.CASCADE)
+    Area = models.ForeignKey(Area, on_delete=models.CASCADE)
     name = models.CharField(max_length=45)
 
     def __str__(self) -> str:
@@ -38,7 +38,7 @@ class Perfil(models.Model):
         CREDITO = 3, "Credito"
     payment_type = models.IntegerField(("Payment type"), choices=PaymentType.choices, default=PaymentType.PIX)
     about_me = models.CharField(max_length=255)
-    area = models.ForeignKey(Area, on_delete=models.CASCADE, related_name="area")
+    area = models.ForeignKey(Area, on_delete=models.CASCADE, related_name="area", null=True, blank=True)
     sub_area = models.ForeignKey(SubArea, on_delete=models.CASCADE, related_name="sub_area")
 
     def __str__(self) -> str:
