@@ -48,19 +48,32 @@ class HabilityView(ModelViewSet):
     queryset = Hability.objects.all()
     serializer_class = HabilitySerializer
 
+from rest_framework.response import Response
+from rest_framework import status
+from django.core.mail import send_mail
+
 class MyProjectsView(ModelViewSet):
     queryset = MyProjects.objects.all()
     serializer_class = MyProjectSerializer
 
+    def update(self, request, *args, **kwargs):
+        instance = self.get_object()
+        previous_in_execution = instance.in_execution
+        if instance.in_execution  =True:
+            response = super().update(request, *args, **kwargs)
+            subject = f"O projeto {instance.project.title} está finalizado"
+            message = f"Olá {instance.project.contractor}, seu projeto está finalizado"
+            recipient_list = [instance.project.contractor.user.email]
+            from_email = "martinsbarroskaua85@gmail.com"
+            send_mail(
+                message=message,
+                subject=subject,
+                recipient_list=recipient_list,
+                from_email=from_email
+            )
+            return Response({"message": "Deu tudo certo"}, status=status.HTTP_200_OK)
+        elif instance.in_execution:
+            return Response({"message": "Então bro, seguinte, para de cagar"}, status=status.HTTP_400_BAD_REQUEST)
 class MyCompetencyView(ModelViewSet):
     queryset = MyCompetency.objects.all()
     serializer_class = MyCompetencySerializer
-
-    def update(self, request, *args, **kwargs):
-        instance = self.get_object()
-        finished_project = instance.in_execution
-
-        response = super().update(request, *args, **kwargs)
-
-        if finished_project and not instance.in_execution:
-            subject = f"O projeto {instance.project.title}"
