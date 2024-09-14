@@ -5,8 +5,9 @@ from django.dispatch import receiver
 from django.core.mail import send_mail
 from core.perfil.models import Perfil, Pro, MyProjects, MyCompetency, Hability, Area, SubArea, Nacionality
 from core.user.models import User
-from rest_framework.response import Response
 from rest_framework import status
+from rest_framework.response import Response
+from django.core.mail import send_mail
 
 class PerfilView(ModelViewSet):
     queryset = Perfil.objects.all()
@@ -15,7 +16,7 @@ class PerfilView(ModelViewSet):
     @receiver(post_save, sender=Perfil)
     def sendEmailUpdate(sender, instance, created, **kwargs):
         message = "Seu perfil foi alterado"
-        subject = f"Olá {instance.user.name}!, se perfil sofreu algumas alterações!"
+        subject = f"Olá {instance.user.name}!, seu perfil sofreu algumas alterações!"
         recipient_list = [instance.user.email]
         from_email = "martinsbarroskaua85@gmail.com"
         if not created:
@@ -25,9 +26,6 @@ class PerfilView(ModelViewSet):
                 recipient_list=recipient_list,
                 from_email=from_email
             )
-
-    
-
 class ProView(ModelViewSet):
     queryset = Pro.objects.all()
     serializer_class = ProSerializer
@@ -47,11 +45,6 @@ class SubAreaView(ModelViewSet):
 class HabilityView(ModelViewSet):
     queryset = Hability.objects.all()
     serializer_class = HabilitySerializer
-
-from rest_framework.response import Response
-from rest_framework import status
-from django.core.mail import send_mail
-
 class MyProjectsView(ModelViewSet):
     queryset = MyProjects.objects.all()
     serializer_class = MyProjectSerializer
@@ -66,8 +59,6 @@ class MyProjectsView(ModelViewSet):
         self.perform_update(serializer)
 
         new_value = instance.in_execution
-
-        
         if new_value == False and new_value != old_value:
             print(instance.project.contractor.user)
             subject = f"O projeto {instance.project.title} está finalizado"
@@ -84,3 +75,9 @@ class MyProjectsView(ModelViewSet):
 class MyCompetencyView(ModelViewSet):
     queryset = MyCompetency.objects.all()
     serializer_class = MyCompetencySerializer
+
+    def list(self, request, *args, **kwargs):
+        querset = self.queryset.order_by('-created_at')[:3]
+        serializer = self.get_serializer(querset, many=True)
+        
+        return Response(serializer.data, status=status.HTTP_200_OK)

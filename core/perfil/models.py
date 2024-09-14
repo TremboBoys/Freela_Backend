@@ -54,7 +54,7 @@ class MyCompetency(models.Model):
     time = models.IntegerField(("Time of experience"), choices=Time.choices, default=Time.NORMAL)
     service = models.ForeignKey(Project, on_delete=models.CASCADE, null=True, blank=True)
     certification = models.ForeignKey(Document, on_delete=models.CASCADE, null=True, blank=True)
-    
+    created_at = models.DateField(auto_now_add=True)
 class MyProjects(models.Model):
     in_execution = models.BooleanField(default=True)
     perfil = models.ForeignKey(Perfil, on_delete=models.CASCADE, related_name="perfil")
@@ -62,3 +62,4 @@ class MyProjects(models.Model):
 class Pro(models.Model):
     perfil = models.ForeignKey(Perfil, on_delete=models.CASCADE)
     become_pro = models.DateField()
+    is_paid = models.BooleanField(default=False)
