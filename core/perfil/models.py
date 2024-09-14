@@ -63,3 +63,7 @@ class Pro(models.Model):
     perfil = models.ForeignKey(Perfil, on_delete=models.CASCADE)
     become_pro = models.DateField()
     is_paid = models.BooleanField(default=False)
+
+class ChoiceProject(models.Model):
+    perfil = models.ForeignKey(Perfil, on_delete=models.CASCADE)
+    project = models.ForeignKey(MyProjects, on_delete=models.CASCADE)

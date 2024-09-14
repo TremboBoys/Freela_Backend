@@ -1,13 +1,17 @@
 from rest_framework.viewsets import ModelViewSet 
-from core.perfil.serializer import PerfilSerializer, ProSerializer, MyCompetencySerializer, MyProjectSerializer, NacionalitySerializer, AreaSerializer,SubAreaSerializer, HabilitySerializer
+from core.perfil.serializer import PerfilSerializer, ProSerializer, MyCompetencySerializer, MyProjectSerializer, NacionalitySerializer, AreaSerializer,SubAreaSerializer, HabilitySerializer, ChoiceProjectSerializer
 from django.db.models.signals import post_save, pre_save
 from django.dispatch import receiver
 from django.core.mail import send_mail
-from core.perfil.models import Perfil, Pro, MyProjects, MyCompetency, Hability, Area, SubArea, Nacionality
+from core.perfil.models import Perfil, Pro, MyProjects, MyCompetency, Hability, Area, SubArea, Nacionality, ChoiceProject
 from core.user.models import User
 from rest_framework import status
 from rest_framework.response import Response
 from django.core.mail import send_mail
+
+class ChoiceProjectView(ModelViewSet):
+    queryset = ChoiceProject.objects.all()
+    serializer_class = ChoiceProjectSerializer
 
 class PerfilView(ModelViewSet):
     queryset = Perfil.objects.all()
@@ -49,6 +53,20 @@ class MyProjectsView(ModelViewSet):
     queryset = MyProjects.objects.all()
     serializer_class = MyProjectSerializer
 
+    def list(self, request, *args, **kwargs):
+        choiceObject = ChoiceProject.objects.values_list('project_id', flat=True)
+        queryset = MyProjects.objects.filter(id__in=choiceObject)
+        other = MyProjects.objects.exclude(id__in=choiceObject)
+        in_execution = queryset.filter(in_execution=True)
+        not_in_execution = queryset.filter(in_execution=False)
+
+        other_serializer = MyProjectSerializer(other, many=True)
+        in_execution_serializer = MyProjectSerializer(in_execution, many=True)
+        not_in_execution_serializer = MyProjectSerializer(not_in_execution, many=True)
+        
+        return Response({'in_execution': f"{in_execution_serializer.data}", 'not_in_execution': f"{not_in_execution_serializer.data}", 'other': f"{other_serializer.data}"}, status=status.HTTP_200_OK)
+
+    
     def update(self, request, *args, **kwargs):
         partial = kwargs.pop('partial', False)
         instance = self.get_object()
@@ -81,3 +99,4 @@ class MyCompetencyView(ModelViewSet):
         serializer = self.get_serializer(querset, many=True)
         
         return Response(serializer.data, status=status.HTTP_200_OK)
+

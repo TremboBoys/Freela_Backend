@@ -1,6 +1,6 @@
 from rest_framework.serializers import ModelSerializer
 from rest_framework.serializers import ModelSerializer
-from core.perfil.models import Perfil, Hability, Nacionality, Area, SubArea, MyProjects, MyCompetency, Pro
+from core.perfil.models import Perfil, Hability, Nacionality, Area, SubArea, MyProjects, MyCompetency, Pro, ChoiceProject
 
 class PerfilSerializer(ModelSerializer):
     class Meta:
@@ -41,4 +41,9 @@ class MyCompetencySerializer(ModelSerializer):
 class ProSerializer(ModelSerializer):
     class Meta:
         model = Pro
+        fields = "__all__"
+
+class ChoiceProjectSerializer(ModelSerializer):
+    class Meta:
+        model = ChoiceProject
         fields = "__all__"
