@@ -57,13 +57,22 @@ class MyProjectsView(ModelViewSet):
     serializer_class = MyProjectSerializer
 
     def update(self, request, *args, **kwargs):
+        partial = kwargs.pop('partial', False)
         instance = self.get_object()
-        previous_in_execution = instance.in_execution
-        if instance.in_execution  =True:
-            response = super().update(request, *args, **kwargs)
+        old_value = instance.in_execution
+
+        serializer = self.get_serializer(instance, data=request.data, partial=partial)
+        serializer.is_valid(raise_exception=True)
+        self.perform_update(serializer)
+
+        new_value = instance.in_execution
+
+        
+        if new_value == False and new_value != old_value:
+            print(instance.project.contractor.user)
             subject = f"O projeto {instance.project.title} está finalizado"
-            message = f"Olá {instance.project.contractor}, seu projeto está finalizado"
-            recipient_list = [instance.project.contractor.user.email]
+            message = f"Olá {instance.project.contractor.name}, seu projeto está finalizado"
+            recipient_list = [instance.project.contractor.email]
             from_email = "martinsbarroskaua85@gmail.com"
             send_mail(
                 message=message,
@@ -71,9 +80,7 @@ class MyProjectsView(ModelViewSet):
                 recipient_list=recipient_list,
                 from_email=from_email
             )
-            return Response({"message": "Deu tudo certo"}, status=status.HTTP_200_OK)
-        elif instance.in_execution:
-            return Response({"message": "Então bro, seguinte, para de cagar"}, status=status.HTTP_400_BAD_REQUEST)
+        return Response(serializer.data)
 class MyCompetencyView(ModelViewSet):
     queryset = MyCompetency.objects.all()
     serializer_class = MyCompetencySerializer
