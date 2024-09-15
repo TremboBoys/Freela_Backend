@@ -1,4 +1,4 @@
-from rest_framework.viewsets import ModelViewSet 
+from rest_framework.viewsets import ModelViewSet, PotasViewSet
 from core.perfil.serializer import PerfilSerializer, ProSerializer, MyCompetencySerializer, MyProjectSerializer, NacionalitySerializer, AreaSerializer,SubAreaSerializer, HabilitySerializer, ChoiceProjectSerializer
 from django.db.models.signals import post_save, pre_save
 from django.dispatch import receiver
@@ -49,24 +49,10 @@ class SubAreaView(ModelViewSet):
 class HabilityView(ModelViewSet):
     queryset = Hability.objects.all()
     serializer_class = HabilitySerializer
-class MyProjectsView(ModelViewSet):
+class MyProjectsView(PotasViewSet):
     queryset = MyProjects.objects.all()
     serializer_class = MyProjectSerializer
 
-    def list(self, request, *args, **kwargs):
-        choiceObject = ChoiceProject.objects.values_list('project_id', flat=True)
-        queryset = MyProjects.objects.filter(id__in=choiceObject)
-        other = MyProjects.objects.exclude(id__in=choiceObject)
-        in_execution = queryset.filter(in_execution=True)
-        not_in_execution = queryset.filter(in_execution=False)
-
-        other_serializer = MyProjectSerializer(other, many=True)
-        in_execution_serializer = MyProjectSerializer(in_execution, many=True)
-        not_in_execution_serializer = MyProjectSerializer(not_in_execution, many=True)
-        
-        return Response({'in_execution': f"{in_execution_serializer.data}", 'not_in_execution': f"{not_in_execution_serializer.data}", 'other': f"{other_serializer.data}"}, status=status.HTTP_200_OK)
-
-    
     def update(self, request, *args, **kwargs):
         partial = kwargs.pop('partial', False)
         instance = self.get_object()
