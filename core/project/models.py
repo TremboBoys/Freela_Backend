@@ -43,6 +43,7 @@ class Project(models.Model):
         OVER_10000 = 4, "Mais de R$10.000"
     budget_range = models.IntegerField(choices=BudgetRange.choices,default=BudgetRange.RANGE_100_1000)
     delivery = models.DateField(auto_now_add=True, null=True, blank=True)
+    contractor = models.ForeignKey(User, on_delete=models.CASCADE, related_name="contractor")
 class ProjectIntegration(models.Model):
     project = models.ForeignKey(Project, on_delete=models.PROTECT)
     integration = models.ForeignKey(IntegrationType, on_delete=models.PROTECT)

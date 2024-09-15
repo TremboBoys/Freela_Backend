@@ -61,6 +61,8 @@ class MyProjectsView(PotasViewSet):
         serializer = self.get_serializer(instance, data=request.data, partial=partial)
         serializer.is_valid(raise_exception=True)
         self.perform_update(serializer)
+        instance.refresh_from_db()
+        new_value = instance.in_execution
 
         new_value = instance.in_execution
         if new_value == False and new_value != old_value:
@@ -75,6 +77,7 @@ class MyProjectsView(PotasViewSet):
                 recipient_list=recipient_list,
                 from_email=from_email
             )
+            ChoiceProject.objects.filter(project_id=instance.id).delete()
         return Response(serializer.data)
 class MyCompetencyView(ModelViewSet):
     queryset = MyCompetency.objects.all()
