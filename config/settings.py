@@ -33,6 +33,7 @@ INSTALLED_APPS = [
     'core.user',
     'core.perfil',
     'core.project',
+    'core.proposal',
     'uploader',
     
 ]
