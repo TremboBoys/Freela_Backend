@@ -20,7 +20,6 @@ class Area(models.Model):
     def __str__(self) -> str:
         return self.name
 class SubArea(models.Model):
-    Area = models.ForeignKey(Area, on_delete=models.CASCADE)
     name = models.CharField(max_length=45)
 
     def __str__(self) -> str:

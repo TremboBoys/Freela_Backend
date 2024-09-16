@@ -9,4 +9,5 @@ urlpatterns = [
     path('api/user/', include('core.user.urls')),
     path('api/project/', include('core.project.urls')),
     path('api/media/', include('uploader.router')),
+    path('api/proposal/', include('core.proposal.urls')),
 ]
