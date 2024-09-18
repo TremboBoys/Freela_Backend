@@ -30,5 +30,6 @@ class Proposal(models.Model):
 class AcceptProposal(models.Model):
     proposal = models.ForeignKey(Proposal, on_delete=models.CASCADE)
     date = models.DateTimeField(auto_now_add=True)
+    
 
 

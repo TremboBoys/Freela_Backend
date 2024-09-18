@@ -54,10 +54,6 @@ class ProjectIntegration(models.Model):
     project = models.ForeignKey(Project, on_delete=models.PROTECT)
     integration = models.ForeignKey(IntegrationType, on_delete=models.PROTECT)
 
-class FinishedProject(models.Model):
-    project = models.ForeignKey(Project, on_delete=models.CASCADE)
-    date = models.DateTimeField(auto_now=True)
-
 
     
 

@@ -8,4 +8,4 @@ from core.perfil.models import MyProjects
 def updateStatusProject(instance, sender, **kwargs):
     newProjects = MyProjects.objects.create(perfil=instance.proposal.perfil, project=instance.proposal.project, in_execution=True)
     newProjects.save()
-    Project.objects.filter(id=instance.proposal.project.pk).update(in_execution=True)
+    Project.objects.filter(id=instance.proposal.project.pk).update(in_execution=True, status=2)
