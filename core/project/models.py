@@ -44,6 +44,12 @@ class Project(models.Model):
     budget_range = models.IntegerField(choices=BudgetRange.choices,default=BudgetRange.RANGE_100_1000)
     delivery = models.DateField(auto_now_add=True, null=True, blank=True)
     contractor = models.ForeignKey(User, on_delete=models.CASCADE, related_name="contractor")
+    in_execution = models.BooleanField(default=False)
+    class Status(models.IntegerChoices):
+        NOT_STARTED = 1, "It project isn't started"
+        PEDING = 2, "It project is pending"
+        FINISHED = 3, "It project is pending"
+    status = models.IntegerField(("Status of the project"), choices=Status.choices, default=Status.NOT_STARTED)
 class ProjectIntegration(models.Model):
     project = models.ForeignKey(Project, on_delete=models.PROTECT)
     integration = models.ForeignKey(IntegrationType, on_delete=models.PROTECT)
