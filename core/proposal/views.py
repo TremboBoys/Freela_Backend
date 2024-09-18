@@ -1,7 +1,7 @@
-from rest_framework.viewsets import ModelViewSet
+from rest_framework.viewsets import ModelViewSet, AcceptPurposeViewSet
 from core.proposal.serializer import ProposalSerializer, LanguageSerializer, AcceptProposalSerializer
 from core.proposal.models import Proposal, Language, AcceptProposal
-from django.db.models.signals import post_save
+from django.db.models.signals import post_save, pre_save
 from django.dispatch import receiver
 from django.core.mail import send_mail
 from rest_framework.response import Response
@@ -14,12 +14,15 @@ class ProposalView(ModelViewSet):
     serializer_class = ProposalSerializer
 
     def create(self, request, *args, **kwargs):
-        in_execution = request.data.get('in_execution')
-        if not in_execution :
-            return super().create(request, *args, **kwargs)
-        else:
-            return Response("O projeto já está em desenvolvimento", status=status.HTTP_400_BAD_REQUEST)
+        proposta = request.data
+        project_id = proposta.get('project')
+        project = Project.objects.get(id=project_id)
         
+        if not project.in_execution:
+            Response({"message": "Esse projeto não aceita mais propostas"}, status=status.HTTP_423_LOCKED)
+
+        return super().create(request, *args, **kwargs)
+
     def list(self, request, *args, **kwargs):
         email_contratante = request.query_params.get('email', None)
 
@@ -50,18 +53,19 @@ class LanguageView(ModelViewSet):
     queryset = Language.objects.all()
     serializer_class = LanguageSerializer
 
-class AcceptProposalView(ModelViewSet):
+class AcceptProposalView(AcceptPurposeViewSet):
     queryset = AcceptProposal.objects.all()
     serializer_class = AcceptProposalSerializer
 
+    @receiver(pre_save, sender=AcceptProposal)
+    def updateStatusProject(instance, sender, **kwargs):
+        newProjects = MyProjects.objects.create(perfil=instance.proposal.perfil, project=instance.proposal.project, in_execution=True)
+        newProjects.save()
+        Project.objects.filter(id=instance.proposal.project.pk).update(in_execution=True)
+    
     @receiver(post_save, sender=AcceptProposal)
     def acceptPurpose(instance, created, *args, **kwargs):
         if created:
-            newProjects = MyProjects.objects.create(perfil=instance.proposal.perfil, project=instance.proposal.project, in_execution=True)
-            print(newProjects)
-            Proposal.objects.filter(project=instance.proposal.project).update(in_execution=True)
-            print(Proposal)
-    
             subject = f"Sua proposta foi aceita!"
             message = f"Olá {instance.proposal.perfil.user.email}, sua proposta para o projeto para o projeto: {instance.proposal.project.title} foi aceita!!!!!!"
             recipient_list = [instance.proposal.project.contractor.email]
