@@ -1,4 +1,4 @@
-from rest_framework.viewsets import ModelViewSet, AcceptPurposeViewSet
+from rest_framework.viewsets import ModelViewSet, AcceptPurposeViewSet, PurposeViewSet
 from core.proposal.serializer import ProposalSerializer, LanguageSerializer, AcceptProposalSerializer
 from core.proposal.models import Proposal, Language, AcceptProposal
 from django.db.models.signals import post_save, pre_save
@@ -9,16 +9,17 @@ from core.project.models import Project
 from rest_framework import status
 from rest_framework.decorators import action
 from core.perfil.models import MyProjects
-class ProposalView(ModelViewSet):
+class ProposalView(PurposeViewSet):
     queryset = Proposal.objects.all()
     serializer_class = ProposalSerializer
 
     def create(self, request, *args, **kwargs):
-        proposta = request.data
-        project_id = proposta.get('project')
-        project = Project.objects.get(id=project_id)
-        
-        if not project.in_execution:
+        serializer = self.get_serializer(data=request.data)
+        print(serializer)
+        serializer.is_valid(raise_exception=True)
+        project = serializer.validated_data.get('project')
+
+        if project.in_execution == True:
             Response({"message": "Esse projeto não aceita mais propostas"}, status=status.HTTP_423_LOCKED)
 
         return super().create(request, *args, **kwargs)
