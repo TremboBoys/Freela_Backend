@@ -34,6 +34,7 @@ INSTALLED_APPS = [
     'core.perfil',
     'core.project',
     'core.proposal',
+    'core.report',
     'uploader',
     
 ]
