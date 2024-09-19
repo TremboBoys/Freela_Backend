@@ -35,6 +35,7 @@ INSTALLED_APPS = [
     'core.project',
     'core.proposal',
     'core.report',
+    'reportlab',
     'uploader',
     
 ]
