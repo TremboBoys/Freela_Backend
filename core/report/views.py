@@ -3,6 +3,7 @@ from core.report.models import Report
 from core.report.serializer import ReportSerializer
 from django.dispatch import receiver
 from django.db.models.signals import post_save
+from django.shortcuts import render
 class ReportViewSet(ModelViewSet):
     queryset = Report.objects.all()
     serializer_class = ReportSerializer

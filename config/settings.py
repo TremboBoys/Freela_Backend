@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'core.report',
     'reportlab',
     'cloudinary',
+    'requests',
     'uploader',
     
 ]
