@@ -1,6 +1,7 @@
 from django.db import models
 from core.perfil.models import Perfil
 from core.proposal.models import AcceptProposal
+from uploader.models.document import document_file_path
 
 
 class Report(models.Model):
@@ -13,5 +14,10 @@ class Report(models.Model):
 
     def __str__(self) -> str:
         return f"{self.title} - {self.text_body}"
+
+class Pdf(models.Model):
+    report = models.FileField(upload_to=document_file_path)
+    
+
     
     
