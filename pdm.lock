@@ -5,7 +5,7 @@
 groups = ["default"]
 strategy = ["inherit_metadata"]
 lock_version = "4.5.0"
-content_hash = "sha256:9d627b096f5156741d4fa91cb74f81e2b44f220f2901f23c34b1375ffeb25ae9"
+content_hash = "sha256:7010c9dfdd59d94956847a791f97bb26e57515de85661bde18d42e8a0614567b"
 
 [[metadata.targets]]
 requires_python = ">=3.11"
@@ -79,6 +79,17 @@ files = [
 ]
 
 [[package]]
+name = "certifi"
+version = "2024.8.30"
+requires_python = ">=3.6"
+summary = "Python package for providing Mozilla's CA Bundle."
+groups = ["default"]
+files = [
+    {file = "certifi-2024.8.30-py3-none-any.whl", hash = "sha256:922820b53db7a7257ffbda3f597266d435245903d80737e34f8a45ff3e3230d8"},
+    {file = "certifi-2024.8.30.tar.gz", hash = "sha256:bec941d2aa8195e248a60b31ff9f0558284cf01a52591ceda73ea9afffd69fd9"},
+]
+
+[[package]]
 name = "cffi"
 version = "1.17.1"
 requires_python = ">=3.8"
@@ -134,6 +145,20 @@ groups = ["default"]
 files = [
     {file = "chardet-5.2.0-py3-none-any.whl", hash = "sha256:e1cf59446890a00105fe7b7912492ea04b6e6f06d4b742b2c788469e34c82970"},
     {file = "chardet-5.2.0.tar.gz", hash = "sha256:1b3b6ff479a8c414bc3fa2c0852995695c4a026dcd6d0633b2dd092ca39c1cf7"},
+]
+
+[[package]]
+name = "cloudinary"
+version = "1.41.0"
+summary = "Python and Django SDK for Cloudinary"
+groups = ["default"]
+dependencies = [
+    "certifi",
+    "six",
+    "urllib3>=1.26.5",
+]
+files = [
+    {file = "cloudinary-1.41.0.tar.gz", hash = "sha256:e189739a796a7d2ad15c19971741d33a9300816b16c0282b4b14ccf1dd2948c0"},
 ]
 
 [[package]]
@@ -583,6 +608,17 @@ marker = "sys_platform == \"win32\""
 files = [
     {file = "tzdata-2024.1-py2.py3-none-any.whl", hash = "sha256:9068bc196136463f5245e51efda838afa15aaeca9903f49050dfa2679db4d252"},
     {file = "tzdata-2024.1.tar.gz", hash = "sha256:2674120f8d891909751c38abcdfd386ac0a5a1127954fbc332af6b5ceae07efd"},
+]
+
+[[package]]
+name = "urllib3"
+version = "2.2.3"
+requires_python = ">=3.8"
+summary = "HTTP library with thread-safe connection pooling, file post, and more."
+groups = ["default"]
+files = [
+    {file = "urllib3-2.2.3-py3-none-any.whl", hash = "sha256:ca899ca043dcb1bafa3e262d73aa25c465bfb49e0bd9dd5d59f1d0acba2f8fac"},
+    {file = "urllib3-2.2.3.tar.gz", hash = "sha256:e7d814a81dad81e6caf2ec9fdedb284ecc9c73076b62654547cc64ccdcae26e9"},
 ]
 
 [[package]]

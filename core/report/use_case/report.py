@@ -1,23 +1,30 @@
 from reportlab.pdfgen import canvas
-from core.report.models import Pdf
-from rest_framework.response import Response
-from rest_framework import status
-from uploader.models.document import document_file_path
 import os
+import cloudinary, cloudinary.uploader
+import io
 
 def generate_pdf(title:str, text:str,name_freelancer:str, date_finished:str):
-    print('Erro em pdf')
-    directory = 'report'
-    data: list = [title, text, name_freelancer, date_finished]
-    pdf_path = os.path.join(directory, f"{data[0]}.pdf")
-    pdf = canvas.Canvas(pdf_path)
-    x = 1
-    y = 1
+    pdf_buffer = io.BytesIO()
+    
+    pdf = canvas.Canvas(pdf_buffer)
+    x = 100
+    y = 750  
+    data = [title, text, name_freelancer, date_finished]
+
     for row in data:
         pdf.drawString(x, y, row)
-        x+=1
-        y+=1
-    pdf.save()
+        y -= 20  
+
+    pdf.save() 
+
+    pdf_buffer.seek(0)
+
+    upload_result = cloudinary.uploader.upload(pdf_buffer, resource_type='raw', public_id=title)
+
+    return upload_result['secure_url']
+
+    
+
     
 
         
