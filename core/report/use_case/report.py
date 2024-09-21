@@ -20,8 +20,7 @@ def generate_pdf(title:str, text:str,name_freelancer:str, date_finished:str):
         y+=1
     pdf.showPage()
     pdf.save()
-    return Response("O pdf foi gerado", pdf)
-
+    return pdf
         
 
         
