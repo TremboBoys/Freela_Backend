@@ -149,7 +149,7 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",
 ]
 
-cloudinary.config(
+cl = cloudinary.config(
     cloud_name='dm2odcrnf',
     api_key='392291948516824',
     api_secret='8L8ApfYnDq6_YiXSd4lAgDmZGnI'

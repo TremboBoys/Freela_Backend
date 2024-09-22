@@ -6,8 +6,6 @@ from core.report.use_case.downloadArchive import extract_pdf
 
 def generate_pdf(title:str, text:str,name_freelancer:str, date_finished:str):
     pdf_buffer = io.BytesIO()
-    data = [title, text, name_freelancer, date_finished]
-
     pdf = canvas.Canvas(pdf_buffer)
     x = 100
     y = 750  
@@ -27,8 +25,8 @@ def generate_pdf(title:str, text:str,name_freelancer:str, date_finished:str):
         public_id=f"{data[0].replace(' ', '_')}.pdf"
     )
 
-    upload_result['secure_url']
-    return upload_result['secure_url']
+    result = upload_result['secure_url']
+    return result
 
 
 

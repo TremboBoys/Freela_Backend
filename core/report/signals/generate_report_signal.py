@@ -11,7 +11,7 @@ from core.report.use_case.downloadArchive import extract_pdf
 @receiver(post_save, sender=Report)
 def generateReport(sender, instance, **kwargs):
     try:
-        pdf = extract_pdf(ur=generate_pdf(title=str(instance.title), text=str(instance.text_body), name_freelancer=str(instance.accept_proposal.proposal.perfil.user.name), date_finished="10"))
+        pdf = generate_pdf(title=str(instance.title), text=str(instance.text_body), name_freelancer=str(instance.accept_proposal.proposal.perfil.user.name), date_finished="10")
     except BaseException as error:
         return Response({"message": f"Houve um erro dentro de receicer: {str(error)}"})
     
