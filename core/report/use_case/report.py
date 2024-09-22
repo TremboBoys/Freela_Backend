@@ -2,7 +2,6 @@ from reportlab.pdfgen import canvas
 import os
 import cloudinary, cloudinary.uploader
 import io
-from core.report.use_case.downloadArchive import extract_pdf
 
 def generate_pdf(title:str, text:str,name_freelancer:str, date_finished:str):
     pdf_buffer = io.BytesIO()
@@ -25,8 +24,9 @@ def generate_pdf(title:str, text:str,name_freelancer:str, date_finished:str):
         public_id=f"{data[0].replace(' ', '_')}.pdf"
     )
 
-    result = upload_result['secure_url']
-    return result
+    url = cloudinary.utils.cloudinary_url(upload_result, sign=True)[0]
+    return url
+
 
 
 
