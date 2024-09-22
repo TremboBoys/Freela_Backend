@@ -1,21 +1,28 @@
 from django.dispatch import receiver
-from django.db.models.signals import pre_save, post_save
-from core.report.models import Report,Pdf
+from django.db.models.signals import post_save
+import cloudinary.api
+from core.report.models import Report
 from core.report.use_case.report import generate_pdf
-from uploader.models import Document
 from rest_framework.response import Response
-from rest_framework import status
-from django.shortcuts import render
 from django.core.mail import send_mail
-from core.report.use_case.downloadArchive import extract_pdf
+import requests
+import cloudinary
 @receiver(post_save, sender=Report)
 def generateReport(sender, instance, **kwargs):
     try:
-        pdf = generate_pdf(title=str(instance.title), text=str(instance.text_body), name_freelancer=str(instance.accept_proposal.proposal.perfil.user.name), date_finished="10")
+        url = generate_pdf(title=str(instance.title), text=str(instance.text_body), name_freelancer=str(instance.accept_proposal.proposal.perfil.user.name), date_finished="10")
     except BaseException as error:
         return Response({"message": f"Houve um erro dentro de receicer: {str(error)}"})
     
-    print(pdf)
+    result = cloudinary.api.resources_by_context
+
+    status = response.status_code
+
+    if status == 200:
+        print("200", status, response)
+    else:
+        print(status, response)
+    
     try:
         subject = 'Relatório'
         message = pdf
@@ -29,4 +36,4 @@ def generateReport(sender, instance, **kwargs):
         )
     except BaseException as error:
         return Response({"message": f"Houve um erro!!!!: {str(error)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-    
+
