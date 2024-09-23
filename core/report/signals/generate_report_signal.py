@@ -14,15 +14,9 @@ def generateReport(sender, instance, **kwargs):
     except BaseException as error:
         return Response({"message": f"Houve um erro dentro de receicer: {str(error)}"})
         
-    response = requests.get(pdf)
-
-    with open('pizza.pf') as file:
-        file.write(f)
-
-
     try:
         subject = 'Relatório'
-        message = 
+        message = pdf
         recipient_list = [instance.accept_proposal.proposal.project.contractor.email]
         from_email = "martinsbarroskaua85@gmail.com"
         send_mail (

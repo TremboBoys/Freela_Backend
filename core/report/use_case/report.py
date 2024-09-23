@@ -23,9 +23,8 @@ def generate_pdf(title:str, text:str,name_freelancer:str, date_finished:str):
         resource_type='raw', 
         public_id=f"{data[0].replace(' ', '_')}.pdf"
     )
-
-    url = cloudinary.utils.cloudinary_url(upload_result, sign=True)[0]
-    return url
+    
+    return upload_result['secure_url']
 
 
 
