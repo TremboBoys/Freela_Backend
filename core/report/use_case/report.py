@@ -26,13 +26,3 @@ def generate_pdf(title:str, text:str,name_freelancer:str, date_finished:str):
     
     #   return upload_result['secure_url']
     return pdf
-
-
-
-
-    
-
-    
-
-        
-        
