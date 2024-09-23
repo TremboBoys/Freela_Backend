@@ -1,13 +1,13 @@
-from rest_framework.viewsets import ModelViewSet, PotasViewSet
+from rest_framework.viewsets import ModelViewSet
 from core.perfil.serializer import PerfilSerializer, ProSerializer, MyCompetencySerializer, MyProjectSerializer, NacionalitySerializer, AreaSerializer,SubAreaSerializer, HabilitySerializer, ChoiceProjectSerializer
-from django.db.models.signals import post_save, pre_save
+from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.core.mail import send_mail
 from core.perfil.models import Perfil, Pro, MyProjects, MyCompetency, Hability, Area, SubArea, Nacionality, ChoiceProject
-from core.user.models import User
 from rest_framework import status
 from rest_framework.response import Response
 from django.core.mail import send_mail
+from utils.viewset.potas_view import PotasViewSet
 
 class ChoiceProjectView(ModelViewSet):
     queryset = ChoiceProject.objects.all()
