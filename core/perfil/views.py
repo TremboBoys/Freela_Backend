@@ -57,15 +57,13 @@ class MyProjectsView(PotasViewSet):
         partial = kwargs.pop('partial', False)
         instance = self.get_object()
         old_value = instance.in_execution
-
         serializer = self.get_serializer(instance, data=request.data, partial=partial)
         serializer.is_valid(raise_exception=True)
         self.perform_update(serializer)
         instance.refresh_from_db()
         new_value = instance.in_execution
 
-        new_value = instance.in_execution
-        if new_value == False and new_value != old_value:
+        if old_value == True and new_value == False:
             print(instance.project.contractor.user)
             subject = f"O projeto {instance.project.title} está finalizado"
             message = f"Olá {instance.project.contractor.name}, seu projeto está finalizado"
@@ -77,8 +75,12 @@ class MyProjectsView(PotasViewSet):
                 recipient_list=recipient_list,
                 from_email=from_email
             )
-            ChoiceProject.objects.filter(project_id=instance.id).delete()
-        return Response(serializer.data)
+        
+            return Response(serializer.data)
+        elif old_value == False and new_value ==True:
+            instance.refresh_from_db()
+            return Response(serializer.data)
+
 class MyCompetencyView(ModelViewSet):
     queryset = MyCompetency.objects.all()
     serializer_class = MyCompetencySerializer
