@@ -1,9 +1,12 @@
-from rest_framework.viewsets import ModelViewSet, AcceptPurposeViewSet, PurposeViewSet
+from rest_framework.viewsets import ModelViewSet
 from core.proposal.serializer import ProposalSerializer, LanguageSerializer, AcceptProposalSerializer
 from core.proposal.models import Proposal, Language, AcceptProposal
+from utils.viewset.accept_view import AcceptProposalViewSet
+from utils.viewset.proposal_view import ProposalViewSet
+
 from rest_framework.response import Response
 from rest_framework import status
-class ProposalView(PurposeViewSet):
+class ProposalView(ProposalViewSet):
     queryset = Proposal.objects.all()
     serializer_class = ProposalSerializer
 
@@ -22,7 +25,7 @@ class LanguageView(ModelViewSet):
     queryset = Language.objects.all()
     serializer_class = LanguageSerializer
 
-class AcceptProposalView(AcceptPurposeViewSet):
+class AcceptProposalView(AcceptProposalViewSet):
     queryset = AcceptProposal.objects.all()
     serializer_class = AcceptProposalSerializer
 
