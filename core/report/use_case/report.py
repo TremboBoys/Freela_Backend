@@ -7,6 +7,7 @@ import os
 
 def generate_pdf(title:str, text:str,name_freelancer:str, date_finished:str):
     data = [title, text, name_freelancer, date_finished]
+    print("Chad")
 
     x = 100
     y = 750  
