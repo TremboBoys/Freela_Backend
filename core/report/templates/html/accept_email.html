@@ -4,18 +4,17 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Report Acceptance</title>
-  <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
-  <div class="container">
+  <div class="container" style="background-color: #ffffff; padding: 20px; border-radius: 10px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); text-align: center; max-width: 1000px; width: 100%;">
     <div class="message-box">
-      <h1>Report Status</h1>
-      <p>Your report has been reviewed and is ready for acceptance.</p>
-      <!-- Adicione o id "acceptBtn" aqui -->
-      <button id="acceptBtn" ><a href="http://127.0.0.1:8000/api/report/Report/{{ id }}">jdadjajdalkdkla</a></button>
+      <h1 style="font-size: 2rem; color: #333333; margin-bottom: 10px;">Report Status</h1>
+      <p style="font-size: 1.2rem; color: #666666; margin-bottom: 20px;">Your report has been reviewed and is ready for acceptance.</p>
+      <button id="acceptBtn" style="padding: 10px 20px; font-size: 1rem; background-color: #4caf50; color: #ffffff; border: none; border-radius: 5px; cursor: pointer; transition: background-color 0.3s ease;">
+        <a href="http://127.0.0.1:8000/api/report/Report/{{ id }}" style="text-decoration: none; color: white;">Redirect for url</a>
+      </button>
     </div>
-    <hr>
+    <hr style="margin-top: 20px; background-color: black; height: 1px; border: none;">
   </div>
-
 </body>
 </html>
