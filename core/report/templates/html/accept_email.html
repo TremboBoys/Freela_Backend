@@ -1,12 +1,25 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Email</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Report Acceptance</title>
+  <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
-    <h1>Hello!</h1>
-    <p>Thank you for registering at our website.</p>
-    <p>Your confirmation code is: <strong> {{ name }}</strong></p>
-    <p>Best regards,<br>Team</p>
+  <div class="container">
+    <div class="message-box">
+      <h1>Report Status</h1>
+      <p>Your report has been reviewed and is ready for acceptance.</p>
+      <button id="acceptBtn" onclick="acceptReport()">Accept</button>
+    </div>
+  </div>
+
+  <script>
+    function acceptReport() {
+      console.log("Report accepted!");
+      return true;
+    }
+  </script>
 </body>
 </html>
