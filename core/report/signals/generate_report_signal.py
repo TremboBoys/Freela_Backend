@@ -19,7 +19,8 @@ def generate_report(sender, instance, **kwargs):
         
         print('A')
         html_message = render_to_string('html/accept_email.html', {
-                'name': f'{instance.accept_proposal.proposal.perfil.user.email}'
+                'name': f'{instance.accept_proposal.proposal.perfil.user.email}',
+                'id': f'{instance.id}'
         })
         print('B')
         text_content = strip_tags(html_message)
