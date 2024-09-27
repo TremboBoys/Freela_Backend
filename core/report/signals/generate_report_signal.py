@@ -17,26 +17,18 @@ def generate_report(sender, instance, **kwargs):
             date_finished="10"
         )
         
-        print('A')
         html_message = render_to_string('html/accept_email.html', {
                 'name': f'{instance.accept_proposal.proposal.perfil.user.email}',
-                'id': f'{instance.id}'
+                'id': f'{instance.id}',
         })
-        print('B')
         text_content = strip_tags(html_message)
-        print('c')
         subject = 'Relatório'
         recipient_list = [instance.accept_proposal.proposal.project.contractor.email]
         from_email = "martinsbarroskaua85@gmail.com"
         
-        print('d')
         email = EmailMultiAlternatives(subject=subject, to=recipient_list, from_email=from_email, body=text_content)
-        print('e')
         email.attach('report_{}.pdf'.format(instance.id), buffer.getvalue(), 'application/pdf')
-        print('f')
         email.attach_alternative(html_message, "text/html")
-        print("G")
         email.send()
-        print('H')
     except Exception as error:
         print(f"Erro ao gerar e enviar relatório: {error}")
