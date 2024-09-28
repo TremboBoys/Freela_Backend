@@ -2,8 +2,8 @@ from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import A4
 from io import BytesIO
 
-def generate_pdf(title: str, text: str, name_freelancer: str, date_finished: str):
-    data = [text, name_freelancer, date_finished]
+def generate_pdf(title: str, text: str, name_freelancer: str, price: float):
+    data = [text, name_freelancer, price]
 
     buffer = BytesIO()  
     pdf = canvas.Canvas(buffer, pagesize=A4)
@@ -12,24 +12,20 @@ def generate_pdf(title: str, text: str, name_freelancer: str, date_finished: str
     margin_top = 30
     margin_bottom = 80
 
-    # Desenha o título no topo da página
     pdf.drawCentredString(width / 2, height - margin_top - 30, title)
 
     x = 40  
     y = height - margin_top - 70
 
-    # Adiciona uma margem inicial e um espaço para parágrafo para data[0]
-    y -= 30  # Adiciona uma margem inicial
-    for line in wrap_text(data[0], width - 80, pdf):  # Apenas para data[0]
+    y -= 30 
+    for line in wrap_text(data[0], width - 80, pdf):  
         pdf.drawString(x, y, line)
         y -= 20
 
-    # Atualiza a posição para o próximo bloco de texto
-    y -= 10  # Adiciona espaço extra entre os parágrafos
+    y -= 10  
 
-    # Renderiza os outros dados
-    for i, row in enumerate(data[1:], start=1):  # Começa em 1 para ignorar o primeiro item
-        for line in wrap_text(row, width - 80, pdf):
+    for i, row in enumerate(data[1:], start=1):
+        for line in wrap_text(str(row), width - 80, pdf):
             if i == 1:
                 pdf.drawString(x, y, f"Freelancer: {line}")
             elif i == 2:
