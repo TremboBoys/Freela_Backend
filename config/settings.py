@@ -42,7 +42,7 @@ INSTALLED_APPS = [
     'cloudinary',
     'requests',
     'uploader',
-    
+    'transformers',
 ]
 
 MIDDLEWARE = [
