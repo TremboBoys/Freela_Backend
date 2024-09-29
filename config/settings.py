@@ -43,6 +43,9 @@ INSTALLED_APPS = [
     'requests',
     'uploader',
     'transformers',
+    'tensorflow',
+    'torch',
+    'keras',
 ]
 
 MIDDLEWARE = [
