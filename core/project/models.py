@@ -48,7 +48,7 @@ class Project(models.Model):
     class Status(models.IntegerChoices):
         NOT_STARTED = 1, "It project isn't started"
         PEDING = 2, "It project is pending"
-        FINISHED = 3, "It project is pending"
+        FINISHED = 3, "It project is finished"
     status = models.IntegerField(("Status of the project"), choices=Status.choices, default=Status.NOT_STARTED)
 class ProjectIntegration(models.Model):
     project = models.ForeignKey(Project, on_delete=models.PROTECT)
