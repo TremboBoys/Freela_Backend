@@ -46,6 +46,8 @@ INSTALLED_APPS = [
     'tensorflow',
     'torch',
     'keras',
+    'langdetect',
+    'sentencepiece',
 ]
 
 MIDDLEWARE = [

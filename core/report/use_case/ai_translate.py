@@ -1,9 +1,8 @@
 from transformers import pipeline
+from langdetect import detect
 
-class TranslationService:
-    def __init__(self):
-        self.translator = pipeline("translation_en_to_fr")  # Tradução de inglês para francês
-
-    def translate(self, text):
-        result = self.translator(text, max_length=40)
-        return result[0]['translation_text']
+def translante_text(text, target_language):
+    translator = pipeline("translation", model="facebook/m2m100_418M")
+    source_language = detect(text)
+    result = translator(text, src_lang=source_language, tgt_lang=target_language, max_length=255)
+    return result[0]['translation_text']

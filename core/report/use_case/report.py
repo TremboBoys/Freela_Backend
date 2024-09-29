@@ -29,7 +29,7 @@ def generate_pdf(title: str, text: str, name_freelancer: str, price: float):
             if i == 1:
                 pdf.drawString(x, y, f"Freelancer: {line}")
             elif i == 2:
-                pdf.drawString(x, y, f"Price: {line}")
+                pdf.drawString(x, y, f"Price: R${line}")
             y -= 20 
 
             if y < margin_bottom:

@@ -2,19 +2,25 @@ from django.dispatch import receiver
 from django.db.models.signals import post_save
 from core.report.models import Report
 from core.report.use_case.report import generate_pdf
-from django.core.mail import EmailMessage, EmailMultiAlternatives
+from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
-
+from core.report.use_case.ai_translate import translante_text
 @receiver(post_save, sender=Report)
 def generate_report(sender, instance, created, **kwargs):
     if created: 
+        language = instance.accept_proposal.proposal.language.name
+        regular_text = instance.text_body
+        title = instance.title
+        new_text = translante_text(text=regular_text, target_language=language)
+        new_title = translante_text(text=title, target_language=language)
+
         try:
             freelancer_name = str(instance.accept_proposal.proposal.perfil.user.name)
             print(2)
             buffer = generate_pdf(
-                title=str(instance.title), 
-                text=str(instance.text_body), 
+                title=str(new_title), 
+                text=str(new_text), 
                 name_freelancer=freelancer_name, 
                 price = instance.accept_proposal.proposal.price
             )
