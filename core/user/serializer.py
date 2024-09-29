@@ -4,7 +4,8 @@ from core.user.models import User
 class UserSerializer(ModelSerializer):
     class Meta:
         model = User
-        fields = "__all__"
+        fields = ['id', 'name', 'username', 'email', 'password']  
+
         extra_kwargs = {
             'code': {'write_only': True},
         }
