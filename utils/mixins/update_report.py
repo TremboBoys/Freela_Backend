@@ -3,9 +3,6 @@ from core.project.models import Project
 
 
 class UpdateReportModelMixin:
-    """
-    Update a model instance.
-    """
     def update(self, request, *args, **kwargs):
         partial = kwargs.pop('partial', False)
         instance = self.get_object()
