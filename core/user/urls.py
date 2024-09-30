@@ -7,5 +7,5 @@ urlpatterns = [
     path("", include(router.urls)),
     path("code/", SendVericationCodeAPIView.as_view(), name="code"),
     path("user/", UserAPIView.as_view(), name="user"),
-    path("user/delete/<int:pk>", UserDeleteAPIView.as_view(), name="user")
+    path("user/delete/", UserDeleteAPIView.as_view(), name="user")
 ]
