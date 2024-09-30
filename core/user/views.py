@@ -54,18 +54,35 @@ class UserAPIView(APIView):
         serializer = UserSerializer(queryset, many=True)
         return Response(serializer.data)
     
-    def delete(self, request, pk):
-        user = get_object_or_404(User, pk=pk)
-        user.delete()
-        return Response({"message": "User deleted"}, status=status.HTTP_200_OK)
-    
-class UserDeleteAPIView(APIView):
     def delete(self, request):
         pk = request.data.get('id')
         user = get_object_or_404(User, pk=pk)
         user.delete()
         return Response({"message": "User deleted"}, status=status.HTTP_200_OK)
+    
+    def put(self, request):
+        user_id = request.data.get('id')
+        user = get_object_or_404(User, pk=user_id)
+
+        action = request.data.get('action')
+
         
+
+        if action == "update_email":
+            new_email = request.data.get('new_email')
+
+            if not new_email:
+                return Response({"message": "email for update is required"}, status=status.HTTP_400_BAD_REQUEST)
+
+            try:
+                email_user = User.objects.get(id=user_id)
+                email_user.email = new_email
+                email_user.save()
+            except User.DoesNotExist as error:
+                return Response({"message": "User not found!"}, status=status.HTTP_404_NOT_FOUND)
+
+
+
 
     
         
