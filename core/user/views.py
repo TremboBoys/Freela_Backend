@@ -7,6 +7,8 @@ from core.user.models import User
 from django.contrib.auth.hashers import make_password
 from core.user.serializer import UserSerializer
 from django.shortcuts import get_object_or_404
+from core.user.use_case.update_email import update_email
+from core.user.use_case.update_password import updatePassword
 class SendVericationCodeAPIView(APIView):
     def post(self, request):
         email = request.data.get('email')
@@ -47,7 +49,7 @@ class UserAPIView(APIView):
         except Exception as error:
             return Response({"messsage": f"{error}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         
-        return Response({"messaga": "User created"}, status=status.HTTP_200_OK)
+        return Response({"message": "User created"}, status=status.HTTP_201_CREATED )
     
     def get(self, request):
         queryset = User.objects.all()
@@ -60,26 +62,35 @@ class UserAPIView(APIView):
         user.delete()
         return Response({"message": "User deleted"}, status=status.HTTP_200_OK)
     
-    def put(self, request):
-        user_id = request.data.get('id')
-        user = get_object_or_404(User, pk=user_id)
-
+    def patch(self, request):
         action = request.data.get('action')
-
-        
-
+        code = request.data.get('code')
+       
+        if not action or not code:
+           return Response({"message": "Code and action is required"})
+       
+        try:
+            userUpdated = EmailVerification.objects.get(code=code)
+            old_email = userUpdated.email
+            userUpdated.delete()
+        except EmailVerification.DoesNotExist as error:
+           return Response({"message": "Token not found"}, status=status.HTTP_404_NOT_FOUND)
+       
         if action == "update_email":
-            new_email = request.data.get('new_email')
+           print("Ba")
+           newEmail = request.data.get('email')
+           return update_email(old_email=old_email, new_email=newEmail)
 
-            if not new_email:
-                return Response({"message": "email for update is required"}, status=status.HTTP_400_BAD_REQUEST)
+        elif action == "update_password":
+            password = request.data.get('password')
+            return updatePassword(email=old_email, password=password)
+        else:
+            return Response({"message": "Method not allowed"}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
 
-            try:
-                email_user = User.objects.get(id=user_id)
-                email_user.email = new_email
-                email_user.save()
-            except User.DoesNotExist as error:
-                return Response({"message": "User not found!"}, status=status.HTTP_404_NOT_FOUND)
+            
+            
+           
+
 
 
 

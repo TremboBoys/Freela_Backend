@@ -15,7 +15,7 @@ class User(models.Model):
         verbose_name_plural = "User"
 
 class EmailVerification(models.Model):
-    email = models.EmailField(unique=True)
+    email = models.EmailField(unique=False)
     code = models.CharField(max_length=6)
     created_at = models.DateTimeField(auto_now_add=True)
 
