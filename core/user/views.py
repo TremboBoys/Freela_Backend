@@ -68,7 +68,6 @@ class UserAPIView(APIView):
        
         if not action or not code:
            return Response({"message": "Code and action is required"})
-       
         try:
             userUpdated = EmailVerification.objects.get(code=code)
             old_email = userUpdated.email
@@ -77,7 +76,6 @@ class UserAPIView(APIView):
            return Response({"message": "Token not found"}, status=status.HTTP_404_NOT_FOUND)
        
         if action == "update_email":
-           print("Ba")
            newEmail = request.data.get('email')
            return update_email(old_email=old_email, new_email=newEmail)
 

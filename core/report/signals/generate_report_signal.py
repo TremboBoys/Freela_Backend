@@ -6,6 +6,7 @@ from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
 from core.report.use_case.ai_translate import translante_text
+
 @receiver(post_save, sender=Report)
 def generate_report(sender, instance, created, **kwargs):
     if created: 
