@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'core.project',
     'core.proposal',
     'core.report',
+    'core.service',
     'reportlab',
     'cloudinary',
     'requests',
