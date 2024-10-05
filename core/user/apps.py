@@ -6,4 +6,4 @@ class UserConfig(AppConfig):
     name = 'core.user'
 
     def ready(self) -> None:
-        import core.user.signals.email_verification
+        import core.user.signals.code_verification
