@@ -1,3 +1,10 @@
 from django.db import models
+from core.perfil.models import Perfil
 
-# Create your models here.
+class Service(models.Model):
+    class TypeOfService(models.IntegerChoices):
+        FREE = 1, "Free"
+        MONTH = 2, "Month"
+        YEAR = 3, "Year"
+    perfil = models.ForeignKey(Perfil, on_delete=models.CASCADE)
+    service = models.IntegerField(("Services"), choices=TypeOfService.choices, default=TypeOfService.FREE)
