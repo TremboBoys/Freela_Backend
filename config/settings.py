@@ -145,11 +145,16 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 #
 #}
 
-SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),
-    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
-    'AUTH_HEADER_TYPES': ('Bearer',),
-}
+#SIMPLE_JWT = {
+#    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),
+#    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
+#    'AUTH_HEADER_TYPES': ('Bearer',),
+#}
+
+#REST_FRAMEWORK = {
+#    "DEFAULT_AUTHENTICATION_CLASSES": ("core.authentication.TokenAuthentication",), # Autenticação no passage.id
+#    "DEFAULT_PERMISSION_CLASSES": ("rest_framework.permissions.IsAuthenticated"), # Permissão total para usuários autenticados
+#}
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",  
@@ -169,3 +174,6 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = "martinsbarroskaua85@gmail.com"
 EMAIL_HOST_PASSWORD = "hlgx xdmn prhf areg"
+
+PASSAGE_APP_ID = 'RqVDnxkssH8vwNCSKmmCIl1b'
+PASSAGE_API_KEY = 'LS0tLS1CRUdJTiBSU0EgUFVCTElDIEtFWS0tLS0tCk1JSUJDZ0tDQVFFQTRGdTBYWFRXd1pXbkdWcTRMT0VRZXhZbjZHUDJNWnJsbzVSdFNLZHNsOXBIMEQvYllWanMKTWhoMWtQT3lPRGsrcjBxQ2Iwd3h6ZzlmYnNYb1kzWXgwUmR6NzBXckFybFRHc2JnV0l1V2lwOHhDem9wREZoWApKTkhDRENqZWFkSkpKY2l1QVgyVmdTMm4zc2thNnVWZ1I3QzNjUU5wK0FnRWpKMEEwUXAzZFBGc2RDdkFtbXpDCkVqWVg3UVdHSVBia0tCSUR3b1JKYk1CdXhkdlZTUitHYUU5cXFPS3VOSlF1Z3Q3Q1hXbnpGMEJxa2NlWjVSVmgKdXozRlJndHZjREpXVWNFcGgwTktVYjJsWGM1bmdDUTBrVEw0QXhKUzZyVmxzS3BxNXdnd2xPbFN1VFB6RlJENApZV1pncGNhL0tyNlc1Nks1ZmRTdFJrc2txUDhGRlY0UTdRSURBUUFCCi0tLS0tRU5EIFJTQSBQVUJMSUMgS0VZLS0tLS0K'
