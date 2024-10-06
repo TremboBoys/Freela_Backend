@@ -4,17 +4,17 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.views import APIView
 from core.user.models import User
-from core.user.permissions import admin_group, freelancer_group, contratante 
+#from core.user.permissions import admin_group, freelancer_group, contratante 
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth.hashers import check_password
 
  
-def authenticate_user(email, password):
-    try:
-        user = User.objects.get(email=email)    
-        print("K")
-        print(check_password(password, user.password))
-        if not check_password(password, user.password):  # Fix this line
+"""#def authenticate_user(email, password):
+#    try:
+#        user = User.objects.get(email=email)    
+#        print("K")
+#        print(check_password(password, user.password))
+#        if not check_password(password, user.password):  # Fix this line
             return None
         print("J")
         
@@ -61,6 +61,7 @@ class LoginAPIView(APIView):
             return Response({"message": "Not authenticated"}, status=status.HTTP_401_UNAUTHORIZED)
         
         return Response(resp, status=status.HTTP_200_OK)
+"""
 
 
     
