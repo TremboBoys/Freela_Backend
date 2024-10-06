@@ -9,22 +9,16 @@ from rest_framework_simplejwt.tokens import RefreshToken
 def authenticate_user(email):
     try:
         user = User.objects.get(email=email)    
-        try:
-            if user.type_user == 'admin':
-                print("A")
-                admin_group.user_set.add(user)  # Adicione a instância do usuário
-            elif user.type_user == "contratante":
-                print("c")
-                contratante.user_set.add(user)  # Adicione a instância do usuário
-            else:      
-                try:
-                    freelancer_group.user_set.add(user)  # Adicione a instância do usuário
-                except Exception as error:
-                    print(error)
-        except Exception as error:
-            return None
-
-    
+        if user.type_user == 'admin':
+            newAdmin = admin_group.user_set
+            newAdmin.add(user)
+        elif user.type_user == "contratante":
+            newcontratante = contratante.user_set
+            newcontratante.add(user)
+        else:      
+            newFreelancer = freelancer_group.user_set
+            newFreelancer.add(user)
+            
         refresh = RefreshToken.for_user(user)
         access = str(refresh.access_token)
         refresh_token = str(refresh)
