@@ -1,7 +1,8 @@
 from django.db import models
-class User(models.Model):
+from django.contrib.auth.models import AbstractBaseUser,AbstractUser, BaseUserManager, Group, Permission
+class User(AbstractUser):
     name = models.CharField(max_length=45)
-    username = models.CharField(max_length=45)
+    username = models.CharField(max_length=45, unique=True)
     email = models.EmailField(max_length=45, unique=True)
     password= models.CharField(max_length=45)
     code = models.CharField(max_length=6, blank=True, null=True)
@@ -13,6 +14,21 @@ class User(models.Model):
 
     def __str__(self) -> str:
         return f"{self.name}  - {self.username} - {self.password}"
+    
+    groups = models.ManyToManyField(
+        Group,
+        related_name='custom_user_groups',  # Change this to a unique name
+        blank=True,
+    )
+
+    user_permissions = models.ManyToManyField(
+        Permission,
+        related_name='custom_user_permissions',  # Change this to a unique name
+        blank=True,
+    ) 
+
+    USERNAME_FIELD = 'username'  # Campo que será usado para autenticação
+    REQUIRED_FIELDS = ['email']  # Campos obrigatórios ao criar superusuário
 
     class Meta:
         verbose_name = "User"
