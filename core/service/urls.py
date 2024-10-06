@@ -1,10 +1,12 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-from core.service.views import ServiceViewSet
+from core.service.views import ServiceViewSet, ContractServiceViewSet
 
 router = DefaultRouter()
-router.register("services", ServiceViewSet, basename="service")
+router.register("service", ServiceViewSet, basename="service")
+router.register("contract", ContractServiceViewSet, basename="contract")
+
 
 urlpatterns = [
-    path("", include(router.urls))
+    path("", include(router.urls))  
 ]
