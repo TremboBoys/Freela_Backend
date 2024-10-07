@@ -1,7 +1,6 @@
 from rest_framework.response import Response
 from core.project.models import Project
 
-
 class UpdateReportModelMixin:
     def update(self, request, *args, **kwargs):
         partial = kwargs.pop('partial', False)

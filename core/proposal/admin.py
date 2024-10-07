@@ -1,3 +1,7 @@
 from django.contrib import admin
+from core.proposal.models import Proposal, Language, AcceptProposal
 
-# Register your models here.
+
+admin.site.register(Proposal)
+admin.site.register(Language)
+admin.site.register(AcceptProposal)

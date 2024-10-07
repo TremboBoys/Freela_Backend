@@ -9,6 +9,7 @@ from core.user.serializer import UserSerializer
 from django.shortcuts import get_object_or_404
 from core.user.use_case.update_email import update_email
 from core.user.use_case.update_password import updatePassword
+from core.user.use_case.update_type_user import updateTypeUser
 class SendVericationCodeAPIView(APIView):
     def post(self, request):
         email = request.data.get('email')
@@ -31,8 +32,9 @@ class UserAPIView(APIView):
         username = request.data.get('username')
         password = request.data.get('password')
         code = request.data.get('code') 
+        type_user = request.data.get('type_user')
 
-        if not name or not username or not password or not code:
+        if not name or not username or not password or not code or not type_user:
             return Response({"message": "Dates required don't offers"}, status=status.HTTP_400_BAD_REQUEST)
         
         try:
@@ -43,7 +45,7 @@ class UserAPIView(APIView):
 
         try:
             hashed_password = make_password(password=password)
-            user = User.objects.create(username=username, name=name, email=email, password=hashed_password)
+            user = User.objects.create(username=username, name=name, email=email, password=hashed_password, type_user=type_user)
             user.save()
             token.delete()
         except Exception as error:
@@ -82,10 +84,18 @@ class UserAPIView(APIView):
         elif action == "update_password":
             password = request.data.get('password')
             return updatePassword(email=old_email, password=password)
+        elif action == "update_type_user":
+            newType = request.data.get('type_user')
+            if newType == 'admin':
+                return Response({"message": "Unauthorized"}, status=status.HTTP_401_UNAUTHORIZED)
+            else: 
+                updateTypeUser(old_email, newType)
+                return Response({"message": "Type user updated!"}, status=status.HTTP_200_OK)
+
         else:
             return Response({"message": "Method not allowed"}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
 
-            
+
             
            
 

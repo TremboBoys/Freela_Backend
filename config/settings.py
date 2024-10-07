@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'core.project',
     'core.proposal',
     'core.report',
+    'core.service',
     'reportlab',
     'cloudinary',
     'requests',
@@ -90,7 +91,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
     }
-}
+    }
 
 
 # Password validation
@@ -176,3 +177,4 @@ EMAIL_HOST_PASSWORD = "hlgx xdmn prhf areg"
 
 PASSAGE_APP_ID = 'RqVDnxkssH8vwNCSKmmCIl1b'
 PASSAGE_API_KEY = 'LS0tLS1CRUdJTiBSU0EgUFVCTElDIEtFWS0tLS0tCk1JSUJDZ0tDQVFFQTRGdTBYWFRXd1pXbkdWcTRMT0VRZXhZbjZHUDJNWnJsbzVSdFNLZHNsOXBIMEQvYllWanMKTWhoMWtQT3lPRGsrcjBxQ2Iwd3h6ZzlmYnNYb1kzWXgwUmR6NzBXckFybFRHc2JnV0l1V2lwOHhDem9wREZoWApKTkhDRENqZWFkSkpKY2l1QVgyVmdTMm4zc2thNnVWZ1I3QzNjUU5wK0FnRWpKMEEwUXAzZFBGc2RDdkFtbXpDCkVqWVg3UVdHSVBia0tCSUR3b1JKYk1CdXhkdlZTUitHYUU5cXFPS3VOSlF1Z3Q3Q1hXbnpGMEJxa2NlWjVSVmgKdXozRlJndHZjREpXVWNFcGgwTktVYjJsWGM1bmdDUTBrVEw0QXhKUzZyVmxzS3BxNXdnd2xPbFN1VFB6RlJENApZV1pncGNhL0tyNlc1Nks1ZmRTdFJrc2txUDhGRlY0UTdRSURBUUFCCi0tLS0tRU5EIFJTQSBQVUJMSUMgS0VZLS0tLS0K'
+AUTH_USER_MODEL = 'user.User'
