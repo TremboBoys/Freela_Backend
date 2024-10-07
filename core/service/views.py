@@ -6,7 +6,6 @@ from utils.viewset.service_view import ContractServiceModelViewSet
 class ServiceViewSet(ModelViewSet):
     queryset = Service.objects.all()
     serializer_class = ServiveSerializer
-
 class ContractServiceViewSet(ContractServiceModelViewSet):
     queryset = ContractService.objects.all()
     serializer_class = ContractServiceSerializer
