@@ -6,11 +6,11 @@ def updateTypeUser(email, type_user):
 
     try:
         user = User.objects.get(email=email)
-        if type_user == 'freelancer':
+        if type_user == 'contractor':
             numberType = 2
         else:
-            numberType == 3
-        user.type_user == numberType
+            numberType = 3
+        user.type_user = numberType
         user.save()
     except User.DoesNotExist as error:
         return Response({"message": "User not found!"}, status=status.HTTP_404_NOT_FOUND)

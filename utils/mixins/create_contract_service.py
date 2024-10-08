@@ -15,7 +15,7 @@ class CreateContractServiceMixim:
         contractor = serializer.validated_data.get('contractor')
         user = contractor.user.type_user
         
-        if user == 2:
+        if user == 3:
             return Response({"message": "Freelancer can't contractor service"}, status=status.HTTP_410_GONE)
     
         self.perform_create(serializer)
