@@ -8,3 +8,4 @@ class ContractService(models.Model):
         MONTH = 2, "Month"
         YEAR = 3, "YEAR"
     type_of_service = models.IntegerField(("Type of user"), choices=TypeOfService.choices, default=TypeOfService.FREE)
+
