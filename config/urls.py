@@ -13,4 +13,5 @@ urlpatterns = [
     path('api/proposal/', include('core.proposal.urls')),
     path('api/report/', include('core.report.urls')),
     path('api/service/', include('core.service.urls')),
+    path('api/ads/', include('core.ads.urls')),
 ]
