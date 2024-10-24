@@ -11,4 +11,6 @@ class Ads(models.Model):
     perfil = models.ForeignKey(Perfil, on_delete=models.CASCADE)
     target_audience = models.CharField(max_length=255)
     ads_category = models.ForeignKey(AdsCategory, on_delete=models.CASCADE)
+
+    #
     
