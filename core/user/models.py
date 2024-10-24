@@ -17,18 +17,18 @@ class User(AbstractUser):
     
     groups = models.ManyToManyField(
         Group,
-        related_name='custom_user_groups',  # Change this to a unique name
+        related_name='custom_user_groups',  
         blank=True,
     )
 
     user_permissions = models.ManyToManyField(
         Permission,
-        related_name='custom_user_permissions',  # Change this to a unique name
+        related_name='custom_user_permissions',  
         blank=True,
     ) 
 
-    USERNAME_FIELD = 'username'  # Campo que será usado para autenticação
-    REQUIRED_FIELDS = ['email']  # Campos obrigatórios ao criar superusuário
+    USERNAME_FIELD = 'username'  
+    REQUIRED_FIELDS = ['email']  
 
     class Meta:
         verbose_name = "User"
