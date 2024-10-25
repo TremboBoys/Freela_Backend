@@ -5,7 +5,7 @@
 groups = ["default"]
 strategy = ["inherit_metadata"]
 lock_version = "4.5.0"
-content_hash = "sha256:1de406c2b2991392a00f6f13d9cbad655a6cbaebbbbe8be19ecca625b595dbc9"
+content_hash = "sha256:caf334eaf93a90c47a7fcfc8d45e0a9d9ffee55e5a29987cf6157ab326244a46"
 
 [[metadata.targets]]
 requires_python = ">=3.11"
@@ -587,6 +587,16 @@ dependencies = [
 files = [
     {file = "html5lib-1.1-py2.py3-none-any.whl", hash = "sha256:0d78f8fde1c230e99fe37986a60526d7049ed4bf8a9fadbad5f00e22e58e041d"},
     {file = "html5lib-1.1.tar.gz", hash = "sha256:b2e5b40261e20f354d198eae92afc10d750afb487ed5e50f9c4eaf07c184146f"},
+]
+
+[[package]]
+name = "huggingface"
+version = "0.0.1"
+summary = "HuggingFace is a single library comprising the main HuggingFace libraries."
+groups = ["default"]
+files = [
+    {file = "huggingface-0.0.1-py3-none-any.whl", hash = "sha256:98a3409537557cd2fd768997ef94cab08529f86c5e106e6d54bbabdd5ee03910"},
+    {file = "huggingface-0.0.1.tar.gz", hash = "sha256:0a2f228fd956801d68b7c6a8bef478dfa60c4b7d7eba572ea7de39ecf87e505a"},
 ]
 
 [[package]]
@@ -1799,7 +1809,7 @@ files = [
 
 [[package]]
 name = "transformers"
-version = "4.45.1"
+version = "4.46.0"
 requires_python = ">=3.8.0"
 summary = "State-of-the-art Machine Learning for JAX, PyTorch and TensorFlow"
 groups = ["default"]
@@ -1816,8 +1826,8 @@ dependencies = [
     "tqdm>=4.27",
 ]
 files = [
-    {file = "transformers-4.45.1-py3-none-any.whl", hash = "sha256:21e3f47aa7256dbbfb5215937a3168a984c94432ce3a16b7908265807d62aee8"},
-    {file = "transformers-4.45.1.tar.gz", hash = "sha256:9cace11072172df05ca6a694fcd1f5064a55b63285e492bd88f0ad1cec270f02"},
+    {file = "transformers-4.46.0-py3-none-any.whl", hash = "sha256:e161268ae8bee315eb9e9b4c0b27f1bd6980f91e0fc292d75249193d339704c0"},
+    {file = "transformers-4.46.0.tar.gz", hash = "sha256:3a9e2eb537094db11c3652334d281afa4766c0e5091c4dcdb454e9921bb0d2b7"},
 ]
 
 [[package]]

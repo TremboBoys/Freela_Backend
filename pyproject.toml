@@ -20,7 +20,7 @@ dependencies = [
     "requests>=2.32.3",
     "transformers>=4.45.1",
     "tensorflow>=2.17.0",
-    "torch>=2.4.1",trash:///__pypackages__
+    "torch>=2.4.1",
     "torchvision>=0.19.1",
     "torchaudio>=2.4.1",
     "keras>=3.5.0",
@@ -29,6 +29,7 @@ dependencies = [
     "sentencepiece>=0.2.0",
     "passage-identity>=2.1.4",
     "huggingface-hub>=0.26.1",
+    "huggingface>=0.0.1",
 ]
 requires-python = ">=3.11"
 readme = "README.md"

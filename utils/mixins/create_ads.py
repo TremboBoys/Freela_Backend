@@ -2,11 +2,15 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.settings import api_settings
 from core.perfil.models import Perfil
-from transformers import BertForSequenceClassification, BertTokenizer
+from transformers import BertForSequenceClassification, BertTokenizer, AutoTokenizer, AutoModelForSequenceClassification
 import torch
 
-model = BertForSequenceClassification.from_pretrained('potas_recommend')
-tokenizer = BertTokenizer.from_pretrained('potas_recommend')
+token = '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'
+
+model = BertForSequenceClassification.from_pretrained('KaliumPotas/potas_recommend', user_auth_token=token)
+tokenizer = BertTokenizer.from_pretrained('KaliumPotas/potas_recommend')
+
+
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 model.to(device)
 
