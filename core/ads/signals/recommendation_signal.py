@@ -1,4 +1,4 @@
-from django.dispatch import receiver
+"""from django.dispatch import receiver
 from django.db.models.signals import post_save
 from core.ads.models import Ads
 from transformers import BertForSequenceClassification, BertTokenizer
@@ -72,4 +72,4 @@ def recommendAi(sender, instance, created, **kwargs):
                 "similarity": logits 
             })
     return listaRecommend
-        
+"""
