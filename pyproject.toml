@@ -28,6 +28,8 @@ dependencies = [
     "langdetect>=1.0.9",
     "sentencepiece>=0.2.0",
     "passage-identity>=2.1.4",
+    "huggingface-hub>=0.26.1",
+    "huggingface>=0.0.1",
 ]
 requires-python = ">=3.11"
 readme = "README.md"

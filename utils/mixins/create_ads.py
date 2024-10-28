@@ -1,9 +1,12 @@
-from rest_framework.response import Response
+"""from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.settings import api_settings
 from core.perfil.models import Perfil
 from transformers import BertForSequenceClassification, BertTokenizer
 import torch
+import os
+
+
 
 model = BertForSequenceClassification.from_pretrained('potas_recommend')
 tokenizer = BertTokenizer.from_pretrained('potas_recommend')
@@ -46,8 +49,9 @@ class CreateAdsModelMixin:
                 outputs = model(input_ids, attention_mask=attention_mask)
                 logits = outputs.logits
 
-            
-            if logits > 0.92: 
+        
+
+            if logits > 0.92:
                 list_recommend.append({
                     "perfil": c.pk,
                     "similarity": logits
@@ -62,6 +66,7 @@ class CreateAdsModelMixin:
 
     def get_success_headers(self, data):
         try:
-            return {'Location': str(data[api_settings.URL_FIELD_NAME])}
+            return {'Location': str(data.get(api_settings.URL_FIELD_NAME))}
         except (TypeError, KeyError):
             return {}
+"""
