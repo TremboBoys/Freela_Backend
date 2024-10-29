@@ -44,10 +44,6 @@ INSTALLED_APPS = [
     'cloudinary',
     'requests',
     'uploader',
-    'transformers',
-    'tensorflow',
-    'torch',
-    'keras',
     'langdetect',
     'sentencepiece',
 ]
