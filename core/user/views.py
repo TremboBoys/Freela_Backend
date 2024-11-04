@@ -10,98 +10,50 @@ from django.shortcuts import get_object_or_404
 from core.user.use_case.update_email import update_email
 from core.user.use_case.update_password import updatePassword
 from core.user.use_case.update_type_user import updateTypeUser
-class SendVericationCodeAPIView(APIView):
-    def post(self, request):
-        email = request.data.get('email')
+from passage import Passage
+from core.user.permissions import freelancer_group, contratante
 
-        if not email:
-            return Response({"message": "Email is required"}, status=status.HTTP_400_BAD_REQUEST)
-        
-        code = random.randint(100000, 999999) 
-        try:
-            possible_user = EmailVerification.objects.create(email=email, code=code)
-            possible_user.save()
-        except Exception as error:
-            return Response({"message": f"Erro in api for email verification, {error}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-        
-        return Response({"message": "Code invite!"}, status=status.HTTP_201_CREATED)
-
+passage = Passage(api_key=settings.PASSAGE_APP_KEY)
 class UserAPIView(APIView):
     def post(self, request):
         name = request.data.get('name')
         username = request.data.get('username')
+        email = request.data.get('email')
         password = request.data.get('password')
-        code = request.data.get('code') 
         type_user = request.data.get('type_user')
+        
+        if name or username or email or password or type_user == None or len(password) < 8:
+            return Response({"message": "Has a incomplete data"}, status=status.HTTP_400_BAD_REQUEST)
 
-        if not name or not username or not password or not code or not type_user:
-            return Response({"message": "Dates required don't offers"}, status=status.HTTP_400_BAD_REQUEST)
+        
+        if User.objects.get(email=email):
+            return Response({"message": "User already exists"}, status=status.HTT_409_CONFLICT)
         
         try:
-            token = EmailVerification.objects.get(code=code)
-            email = token.email
-        except EmailVerification.DoesNotExist as error:
-            return Response({"message": "Code doesn't exists"}, status=status.HTTP_404_NOT_FOUND)
-
-        try:
-            hashed_password = make_password(password=password)
-            user = User.objects.create(username=username, name=name, email=email, password=hashed_password, type_user=type_user)
+            if type_user == "contractor":
+                type_user = 2
+            elif type_user == "freelancer":
+                type_user = 3
+            user = User.objects.create(name=name, username=username, password=make_password(password=password), type_user=type_user, email=email)
+            if user.type_user == 2:
+                user.groups.add(contratante)
+            else:
+                user.groups.add(freelancer_group)
             user.save()
-            token.delete()
         except Exception as error:
-            return Response({"messsage": f"{error}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            return Response({"message": error}, status=status.HTTP_404_NOT_FOUND)
         
-        return Response({"message": "User created"}, status=status.HTTP_201_CREATED )
-    
-    def get(self, request):
-        queryset = User.objects.all()
-        serializer = UserSerializer(queryset, many=True)
-        return Response(serializer.data)
-    
-    def delete(self, request):
-        pk = request.data.get('id')
-        user = get_object_or_404(User, pk=pk)
-        user.delete()
-        return Response({"message": "User deleted"}, status=status.HTTP_200_OK)
-    
-    def patch(self, request):
-        action = request.data.get('action')
-        code = request.data.get('code')
-       
-        if not action or not code:
-           return Response({"message": "Code and action is required"})
-        try:
-            userUpdated = EmailVerification.objects.get(code=code)
-            old_email = userUpdated.email
-            userUpdated.delete()
-        except EmailVerification.DoesNotExist as error:
-           return Response({"message": "Token not found"}, status=status.HTTP_404_NOT_FOUND)
-       
-        if action == "update_email":
-           newEmail = request.data.get('email')
-           return update_email(old_email=old_email, new_email=newEmail)
+        response = passage.create_user(email=email, password=password)
 
-        elif action == "update_password":
-            password = request.data.get('password')
-            return updatePassword(email=old_email, password=password)
-        elif action == "update_type_user":
-            newType = request.data.get('type_user')
-            if newType == 'admin':
-                return Response({"message": "Unauthorized"}, status=status.HTTP_401_UNAUTHORIZED)
-            else: 
-                updateTypeUser(old_email, newType)
-                return Response({"message": "Type user updated!"}, status=status.HTTP_200_OK)
-
+        if response.status_code == 200:
+            return Response({"message": "User created"}, status=status.HTTP_201_CREATED)
         else:
-            return Response({"message": "Method not allowed"}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
+            return Response({"message": "Error in create user"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        
+                
+                
 
-
-            
-           
-
-
-
-
+        
 
     
         

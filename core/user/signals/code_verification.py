@@ -1,11 +1,11 @@
-from django.db.models.signals import post_save
-from django.dispatch import receiver
-from core.user.models import EmailVerification
-from django.core.mail import EmailMultiAlternatives
-from django.template.loader import render_to_string
-from django.utils.html import strip_tags
+#from django.db.models.signals import post_save
+#from django.dispatch import receiver
+#from core.user.models import EmailVerification
+#from django.core.mail import EmailMultiAlternatives
+#from django.template.loader import render_to_string
+#from django.utils.html import strip_tags
 
-@receiver(post_save, sender=EmailVerification)
+"""@receiver(post_save, sender=EmailVerification)
 def send_code(sender, instance, created, **kwargs):
     subject = "Confirm your email"
 
@@ -28,3 +28,4 @@ def send_code(sender, instance, created, **kwargs):
         email.send()
     except Exception as error:
         print(f"Error in signal send code  in user {error}")
+"""
