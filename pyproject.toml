@@ -4,6 +4,7 @@ version = "0.1.0"
 description = "Default template for PDM package"
 authors = [
     {name = "kauabarros-24", email = "martinsbarroskaua@gmail.com"},
+    {name = "", email = ""},
 ]
 dependencies = [
     "django>=5.1.1",
@@ -31,17 +32,12 @@ dependencies = [
     "huggingface-hub>=0.26.1",
     "huggingface>=0.0.1",
 ]
-requires-python = ">=3.11"
+requires-python = "==3.11.*"
 readme = "README.md"
 license = {text = "MIT"}
 
-[build-system]
-requires = ["pdm-backend"]
-build-backend = "pdm.backend"
-
-
 [tool.pdm]
-distribution = true
+distribution = false
 
 [tool.pdm.scripts]
 r = "python3 manage.py runserver"
