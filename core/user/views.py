@@ -112,3 +112,11 @@ class UserAPIView(APIView):
                 return Response({"message": "User doesn't exists"}, status=status.HTTP_404_NOT_FOUND)
             
             return Response({'message': "Updated password!"}, status=status.HTTP_200_OK)
+        """elif update_type == "user_type":
+            user_type = request.data.get('type')
+            if user_type == "admin":
+                return Response({"message": "Not authorized!"}, status=status.HTTP_423_LOCKED)
+            try:
+                if user_type == "freelancer":
+                    user_type == 3"""
+            

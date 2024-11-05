@@ -1,8 +1,9 @@
 from core.user.models import User
 
-
 def authenticate(email):
-    if User.objects.filter(email=email).exists:
-        return True
-    else:
-        return False
+    try:
+        user_exists = User.objects.get(email=email)
+        return user_exists
+    except User.DoesNotExist as error:
+        return None
+
