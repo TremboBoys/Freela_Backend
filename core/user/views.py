@@ -101,22 +101,59 @@ class UserAPIView(APIView):
         email = code_exists.email
         code_exists.delete()
         
+        try:
+            user = User.objects.get(email=email)
+        except User.DoesNotExist:
+            return Response({"message": "User doesn't exists"}, status=status.HTTP_404_NOT_FOUND)
+
+        
         
         if update_type == 'password':
             password = request.data.get('password')
             try:
-                user = User.objects.get(email=email)
                 user.set_password(password)
                 user.save()
             except User.DoesNotExist:
                 return Response({"message": "User doesn't exists"}, status=status.HTTP_404_NOT_FOUND)
+            message = "updated password!"
             
-            return Response({'message': "Updated password!"}, status=status.HTTP_200_OK)
-        """elif update_type == "user_type":
+        elif update_type == "user_type":
             user_type = request.data.get('type')
             if user_type == "admin":
                 return Response({"message": "Not authorized!"}, status=status.HTTP_423_LOCKED)
             try:
                 if user_type == "freelancer":
-                    user_type == 3"""
+                    user.type_user = 3
+                    user.groups.remove(contratante)
+                    user.groups.add(freelancer_group)
+                else:
+                    user.type_user == 2
+                    user.groups.remove(freelancer_group)
+                    user.groups.add(contratante)
+            except Exception as error:
+                return Response({"message": f"Error update user: {str(error)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+            message = "Updated user type!"
+            
+        elif update_type == "email":
+            newEmail = request.data.get('email')
+            
+            if not newEmail:
+                return Response({"message": "Email is required!"}, status=status.HTTP_400_BAD_REQUEST)
+            
+            try:
+                user.email = newEmail
+                user.save()
+            except Exception as error:
+                return Response({"message": f"Error in update email!: {str(error)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            
+            message = "Updated email!"
+
+        return Response({"message": message}, status=status.HTTP_200_OK)
+    
+
+            
+            
+                
+                    
             
