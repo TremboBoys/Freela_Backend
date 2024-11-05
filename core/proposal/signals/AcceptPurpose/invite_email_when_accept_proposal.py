@@ -1,21 +1,31 @@
-
 from core.proposal.models import AcceptProposal
 from django.db.models.signals import post_save
 from django.dispatch import receiver
-from django.core.mail import send_mail
-
+from django.core.mail import EmailMultiAlternatives
+from django.template.loader import render_to_string
+from django.utils.html import strip_tags
 
 @receiver(post_save, sender=AcceptProposal)
-def acceptPurpose(instance, created, *args, **kwargs):
+def accept_proposal_notification(sender, instance, created, **kwargs):
     if created:
-        subject = f"Sua proposta foi aceita!"
-        message = f"Olá {instance.proposal.perfil.user.email}, sua proposta para o projeto para o projeto: {instance.proposal.project.title} foi aceita!!!!!!"
-        recipient_list = [instance.proposal.project.contractor.email]
+        subject = "Your proproposal is accept!"
+        
+        html_message = render_to_string('proposal_accepted.html', {
+            'project_title': instance.proposal.project.title,
+        })
+        text_content = strip_tags(html_message)
+        recipient_list = [instance.proposal.perfil.user.email]
         from_email = "martinsbarroskaua85@gmail.com"
-        send_mail(
-             recipient_list=recipient_list,
-            message=message,
-            subject=subject, 
-            from_email=from_email
+
+        email = EmailMultiAlternatives(
+            subject=subject,
+            body=text_content,
+            to=recipient_list,
+            from_email=from_email,
         )
-                   
+        
+        try:
+            email.attach_alternative(html_message, "text/html")
+            email.send()
+        except Exception as error:
+            print(f"Error in signal accept proposal notification: {error}")
