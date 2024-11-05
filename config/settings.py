@@ -48,7 +48,6 @@ INSTALLED_APPS = [
     'keras',
     'langdetect',
     'sentencepiece',
-    'passage',
 ]
 
 MIDDLEWARE = [
@@ -175,5 +174,4 @@ EMAIL_USE_TLS = True
 EMAIL_HOST_USER = "martinsbarroskaua85@gmail.com"
 EMAIL_HOST_PASSWORD = "hlgx xdmn prhf areg"
 
-PASSAGE_APP_ID ="qfmAr0JEk6pj0isaiXWUFEVx"
-PASSAGE_APP_KEY="Y3OIqdEBR7.2D3flsyS3DEHTCxBiGmAp4Izb5riHhRH0KuZuep6HsS1tndBgeAzbwdaSnLASYhg"
+APPEND_SLASH = False
