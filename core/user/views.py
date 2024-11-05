@@ -2,9 +2,45 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from django.contrib.auth.hashers import make_password
-from core.user.models import User
+from core.user.models import User, EmailVerification
 from core.user.permissions import freelancer_group, contratante
 from core.user.use_case.validation import validate
+from core.user.serializer import UserSerializer
+from django.core.mail import EmailMultiAlternatives
+from django.template.loader import render_to_string
+from django.utils.html import strip_tags
+import random
+
+
+class SendCode(APIView):
+    def post(self, request):
+        email = request.data.get('email')
+        
+        if not email:
+            return Response({"message": "Email is required"}, status=status.HTTP_400_BAD_REQUEST)
+        
+        code = random.randint(100000, 999999)
+        
+        EmailVerification.objects.create(email=email, code=code)
+        
+        html_message = render_to_string('code_user.html', {'code': code})
+        text_content = strip_tags(html_message)
+        
+        subject = 'Your code!'
+        from_email = "martinsbarroskaua85@gmail.com"
+        
+        email_message = EmailMultiAlternatives(subject=subject, body=text_content, from_email=from_email, to=[email])
+        email_message.attach_alternative(html_message, "text/html")
+         
+        try:
+            email_message.send()
+        except Exception as error:
+            return Response({"message": str(error)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        
+        return Response({"message": "Code sent to your email!"}, status=status.HTTP_201_CREATED)
+
+        
+        
 
 class UserAPIView(APIView):
     def post(self, request):
@@ -44,3 +80,26 @@ class UserAPIView(APIView):
         except Exception as error:
             print(error)
             return Response({"message": str(error)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    
+    def get_queryset(self):
+        return User.objects.all()
+    
+    def get(self, request):
+        queryset = self.get_queryset()
+        serializer = UserSerializer(queryset, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    
+    def patch(self, request):
+        code = request.data.get('code')
+        update_type = request.data.get('update')
+        email = EmailVerification.objects.get(code=code).email
+        
+        if update_type == 'password':
+            password = request.data.get('password')
+            try:
+                user = User.objects.get(email=email)
+                user.set_password(make_password=password)
+                user.save()
+            except User.DoesNotExist:
+                return Response({"message": "User doesn't exists"}, status=status.HTTP_404_NOT_FOUND)
+            
