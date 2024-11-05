@@ -92,14 +92,23 @@ class UserAPIView(APIView):
     def patch(self, request):
         code = request.data.get('code')
         update_type = request.data.get('update')
-        email = EmailVerification.objects.get(code=code).email
+        
+        try:
+            code_exists = EmailVerification.objects.get(code=code)
+        except EmailVerification.DoesNotExist as error:
+            return Response({"message": "Token hasn't exists"}, status=status.HTTP_404_NOT_FOUND)
+        
+        email = code_exists.email
+        code_exists.delete()
+        
         
         if update_type == 'password':
             password = request.data.get('password')
             try:
                 user = User.objects.get(email=email)
-                user.set_password(make_password=password)
+                user.set_password(password)
                 user.save()
             except User.DoesNotExist:
                 return Response({"message": "User doesn't exists"}, status=status.HTTP_404_NOT_FOUND)
             
+            return Response({'message': "Updated password!"}, status=status.HTTP_200_OK)
