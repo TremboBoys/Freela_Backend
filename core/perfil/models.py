@@ -36,7 +36,7 @@ class Perfil(models.Model):
         DEBITO = 2, "Debito"
         CREDITO = 3, "Credito"
     payment_type = models.IntegerField(("Payment type"), choices=PaymentType.choices, default=PaymentType.PIX)
-    about_me = models.CharField(max_length=255)
+    about_me = models.CharField(max_length=255, blank=True)
     area = models.ForeignKey(Area, on_delete=models.CASCADE, related_name="area", null=True, blank=True)
     sub_area = models.ForeignKey(SubArea, on_delete=models.CASCADE, related_name="sub_area")
 
