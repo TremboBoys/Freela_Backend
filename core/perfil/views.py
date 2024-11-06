@@ -40,6 +40,7 @@ class NacionalityView(ModelViewSet):
 
 class AreaView(ModelViewSet):
     queryset = Area.objects.all()
+    print(queryset)
     serializer_class = AreaSerializer
 
 class SubAreaView(ModelViewSet):
