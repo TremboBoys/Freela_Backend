@@ -10,7 +10,7 @@ def accept_proposal_notification(sender, instance, created, **kwargs):
     if created:
         subject = "Your proproposal is accept!"
         
-        html_message = render_to_string('proposal_accepted.html', {
+        html_message = render_to_string('proposal_accept.html', {
             'project_title': instance.proposal.project.title,
         })
         text_content = strip_tags(html_message)
