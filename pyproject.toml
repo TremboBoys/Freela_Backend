@@ -29,6 +29,10 @@ dependencies = [
     "sentencepiece>=0.2.0",
     "huggingface-hub>=0.26.1",
     "huggingface>=0.0.1",
+    "psycopg2>=2.9.10",
+    "psycopg>=3.2.3",
+    "psycopg2-binary>=2.9.10",
+    "clang>=17.0.6",
 ]
 requires-python = "==3.11.*"
 readme = "README.md"

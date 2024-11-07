@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from django.contrib.auth.hashers import make_password
 from core.user.models import User, EmailVerification
-from core.user.permissions import freelancer_group, contratante
+#from core.user.permissions import freelancer_group, contratante
 from core.user.use_case.validation import validate
 from core.user.serializer import UserSerializer
 from django.core.mail import EmailMultiAlternatives
@@ -73,7 +73,7 @@ class UserAPIView(APIView):
                 username=username, 
                 type_user=user_type_value
             )            
-            user.groups.add(user_group)
+            #user.groups.add(user_group)
             user.save()
 
             user_data = UserSerializer(user).data
@@ -119,23 +119,23 @@ class UserAPIView(APIView):
                 return Response({"message": "User doesn't exists"}, status=status.HTTP_404_NOT_FOUND)
             message = "updated password!"
             
-        elif update_type == "user_type":
-            user_type = request.data.get('type')
-            if user_type == "admin":
-                return Response({"message": "Not authorized!"}, status=status.HTTP_423_LOCKED)
-            try:
-                if user_type == "freelancer":
-                    user.type_user = 3
-                    user.groups.remove(contratante)
-                    user.groups.add(freelancer_group)
-                else:
-                    user.type_user == 2
-                    user.groups.remove(freelancer_group)
-                    user.groups.add(contratante)
-            except Exception as error:
-                return Response({"message": f"Error update user: {str(error)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
-            message = "Updated user type!"
+        #elif update_type == "user_type":
+        #    user_type = request.data.get('type')
+        #    if user_type == "admin":
+        #        return Response({"message": "Not authorized!"}, status=status.HTTP_423_LOCKED)
+        #    try:
+        #        if user_type == "freelancer":
+        #            user.type_user = 3
+        #            user.groups.remove(contratante)
+        #            user.groups.add(freelancer_group)
+        #        else:
+        #            user.type_user == 2
+        #            user.groups.remove(freelancer_group)
+        #            user.groups.add(contratante)
+        #    except Exception as error:
+        #        return Response({"message": f"Error update user: {str(error)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        #
+        #    message = "Updated user type!"
             
         elif update_type == "email":
             newEmail = request.data.get('email')
