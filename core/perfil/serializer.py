@@ -25,6 +25,7 @@ class PerfilDetailSerializer(ModelSerializer):
     class Meta:
         model = Perfil
         fields = "__all__"
+        depth = 1
 
 class HabilitySerializer(ModelSerializer):
     class Meta:
