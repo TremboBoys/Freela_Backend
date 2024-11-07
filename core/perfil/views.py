@@ -1,5 +1,5 @@
 from rest_framework.viewsets import ModelViewSet
-from core.perfil.serializer import PerfilListSerializer, PerfilDetailSerializer, ProSerializer, MyCompetencySerializer, MyProjectSerializer, NacionalitySerializer, AreaSerializer,SubAreaSerializer, HabilitySerializer, ChoiceProjectSerializer
+from core.perfil.serializer import PerfilListSerializer, PerfilDetailSerializer, PerfilSerializer, ProSerializer, MyCompetencySerializer, MyProjectSerializer, NacionalitySerializer, AreaSerializer,SubAreaSerializer, HabilitySerializer, ChoiceProjectSerializer
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.core.mail import send_mail
@@ -35,7 +35,7 @@ class PerfilView(ModelViewSet):
             return PerfilDetailSerializer
         elif self.action == 'list':
             return PerfilListSerializer
-        return PerfilDetailSerializer
+        return PerfilSerializer
     
 class ProView(ModelViewSet):
     queryset = Pro.objects.all()
