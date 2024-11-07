@@ -76,7 +76,9 @@ class UserAPIView(APIView):
             user.groups.add(user_group)
             user.save()
 
-            return Response({"message": "User created successfully"}, status=status.HTTP_201_CREATED)
+            user_data = UserSerializer(user).data
+
+            return Response(user_data, status=status.HTTP_201_CREATED)
         except Exception as error:
             print(error)
             return Response({"message": str(error)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
