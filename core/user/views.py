@@ -134,7 +134,6 @@ class UserAPIView(APIView):
                 return Response({"message": f"Error update user: {str(error)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
             message = "Updated user type!"
-            
         elif update_type == "email":
             newEmail = request.data.get('email')
             
