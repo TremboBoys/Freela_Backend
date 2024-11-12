@@ -13,6 +13,12 @@ class NacionalitySerializer(ModelSerializer):
         model = Nacionality
         fields = "__all__"
 
+class PerfilCurrentSerializer(ModelSerializer):
+    class Meta:
+        model = Perfil
+        fields = "__all__"
+        depth = 1
+
 class PerfilListSerializer(ModelSerializer):
     user = UserNestedSerializer()
     nacionality = NacionalitySerializer()
@@ -22,15 +28,12 @@ class PerfilListSerializer(ModelSerializer):
         fields = ['user', 'nacionality', 'photo', 'about_me']
 
 class PerfilDetailSerializer(ModelSerializer):
+    user = UserNestedSerializer()
+    nacionality = NacionalitySerializer()
     class Meta:
         model = Perfil
         fields = "__all__"
         depth = 1
-
-class PerfilSerializer(ModelSerializer):
-    class Meta:
-        model = Perfil
-        fields = "__all__"
 
 class HabilitySerializer(ModelSerializer):
     class Meta:
