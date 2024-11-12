@@ -8,6 +8,7 @@ lock_version = "4.5.0"
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 content_hash = "sha256:08faf3a10becce3157ed228f7ce2bb837511bc1753d853c92ebab9e83293d034"
 =======
 content_hash = "sha256:6fcbef17c67fbff0f595ff9a7668f4ccd74474e250bd9e6e54cfd2b95a3f0574"
@@ -18,6 +19,9 @@ content_hash = "sha256:90fb2b2a3a574eb72490a09aa378ff094dadfccb41bf99dd81defa88a
 =======
 content_hash = "sha256:4138e5c7b91b20a5423b40e9c238c34da451d6584342d3e03113560af25eef8c"
 >>>>>>> aa77283 (CHORE: Return JSON User in POST #50)
+=======
+content_hash = "sha256:01cd4fe714b206a14e2153fed64a8004d82efa6840dabbdfc8d6b8634ff4aa51"
+>>>>>>> f455a68 (CHORE: Add filter for GET current user #50)
 
 [[metadata.targets]]
 requires_python = "==3.11.*"
@@ -291,6 +295,20 @@ dependencies = [
 files = [
     {file = "django_cors_headers-4.6.0-py3-none-any.whl", hash = "sha256:8edbc0497e611c24d5150e0055d3b178c6534b8ed826fb6f53b21c63f5d48ba3"},
     {file = "django_cors_headers-4.6.0.tar.gz", hash = "sha256:14d76b4b4c8d39375baeddd89e4f08899051eeaf177cb02a29bd6eae8cf63aa8"},
+]
+
+[[package]]
+name = "django-filter"
+version = "24.3"
+requires_python = ">=3.8"
+summary = "Django-filter is a reusable Django application for allowing users to filter querysets dynamically."
+groups = ["default"]
+dependencies = [
+    "Django>=4.2",
+]
+files = [
+    {file = "django_filter-24.3-py3-none-any.whl", hash = "sha256:c4852822928ce17fb699bcfccd644b3574f1a2d80aeb2b4ff4f16b02dd49dc64"},
+    {file = "django_filter-24.3.tar.gz", hash = "sha256:d8ccaf6732afd21ca0542f6733b11591030fa98669f8d15599b358e24a2cd9c3"},
 ]
 
 [[package]]

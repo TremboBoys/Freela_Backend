@@ -21,8 +21,7 @@ dependencies = [
     "sentencepiece>=0.2.0",
     "huggingface-hub>=0.26.1",
     "huggingface>=0.0.1",
-    "python-magic-bin>=0.4.14",
-    "transformers>=4.46.0",
+    "django-filter>=24.3",
 ]
 requires-python = "==3.11.*"
 readme = "README.md"

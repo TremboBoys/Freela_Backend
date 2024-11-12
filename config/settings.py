@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'uploader',
     'langdetect',
     'sentencepiece',
+    'django_filters',
 ]
 
 MIDDLEWARE = [
@@ -148,10 +149,11 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 #    'AUTH_HEADER_TYPES': ('Bearer',),
 #}
 
-#REST_FRAMEWORK = {
+REST_FRAMEWORK = {
 #    "DEFAULT_AUTHENTICATION_CLASSES": ("core.authentication.TokenAuthentication",), # Autenticação no passage.id
 #    "DEFAULT_PERMISSION_CLASSES": ("rest_framework.permissions.IsAuthenticated"), # Permissão total para usuários autenticados
-#}
+    'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend']
+}
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",  
