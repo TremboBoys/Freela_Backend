@@ -3,6 +3,7 @@ from reportlab.lib.pagesizes import A4
 from io import BytesIO
 
 def generate_pdf(title: str, text: str, name_freelancer: str, price: float):
+    print("Olá")
     data = [text, name_freelancer, price]
 
     buffer = BytesIO()  

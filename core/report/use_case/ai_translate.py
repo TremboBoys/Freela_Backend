@@ -1,8 +1,23 @@
-from transformers import pipeline
-from langdetect import detect
+import requests
 
-def translante_text(text, target_language):
-    translator = pipeline("translation", model="facebook/m2m100_418M")
-    source_language = detect(text)
-    result = translator(text, src_lang=source_language, tgt_lang=target_language, max_length=255)
-    return result[0]['translation_text']
+def ai_translate(text, target_language):
+    if target_language == "English":
+        target_language = "en"
+    data = {
+        "text": text,
+        "target_language": target_language
+    }
+    
+    try:
+        response = requests.post("http://127.0.0.1:8090/ai", json=data)
+    except BaseException as error:
+        print("Error!")
+        
+    if response.status_code == 200:
+        resp = response.json()
+        print(resp['translated_text'])
+        return resp['translated_text']
+    else:
+        print("Error in second plane!")
+        
+        
