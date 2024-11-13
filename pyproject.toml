@@ -28,7 +28,7 @@ license = {text = "MIT"}
 distribution = false
 
 [tool.pdm.scripts]
-arroz = "python3 manage.py runserver"
+r = "python3 manage.py runserver"
 makemigrations = "python3 manage.py makemigrations"
 migrate = "python3 manage.py migrate"
 newMasterMan ="python3 manage.py createsuperuser"

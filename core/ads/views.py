@@ -10,3 +10,4 @@ class AdsCategoryViewSet(ModelViewSet):
     queryset = AdsCategory.objects.all()
     serializer_class = AdsCategorySerializer
 
+
