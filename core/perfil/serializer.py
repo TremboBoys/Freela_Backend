@@ -1,7 +1,7 @@
 from rest_framework.serializers import ModelSerializer
-from rest_framework.serializers import ModelSerializer
 from core.perfil.models import Perfil, Hability, Nacionality, Area, SubArea, MyProjects, MyCompetency, Pro, ChoiceProject
 from core.user.models import User
+from uploader.serializers.image import ImageSerializer
 
 class UserNestedSerializer(ModelSerializer):
     class Meta:
@@ -11,11 +11,6 @@ class UserNestedSerializer(ModelSerializer):
 class NacionalitySerializer(ModelSerializer):
     class Meta:
         model = Nacionality
-        fields = "__all__"
-
-class PerfilSerializer(ModelSerializer):
-    class Meta:
-        model = Perfil
         fields = "__all__"
 class HabilitySerializer(ModelSerializer):
     class Meta:
@@ -52,4 +47,9 @@ class ProSerializer(ModelSerializer):
 class ChoiceProjectSerializer(ModelSerializer):
     class Meta:
         model = ChoiceProject
+        fields = "__all__"
+        
+class PerfilSerializer(ModelSerializer):
+    class Meta:
+        model = Perfil
         fields = "__all__"
