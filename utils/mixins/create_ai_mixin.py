@@ -2,7 +2,6 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.settings import api_settings
 from core.perfil.models import Perfil
-#from transformers import pipeline
 import requests
 
 class CreateAiModelMixin:
@@ -14,7 +13,7 @@ class CreateAiModelMixin:
         category = serializer.validated_data.get('ads_category')
         headers = self.get_success_headers(serializer.data)
         
-        #self.request_ai(audience, category)
+        self.request_ai(audience, category)
         
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
@@ -27,24 +26,24 @@ class CreateAiModelMixin:
         except (TypeError, KeyError):
             return {}
         
-    """def request_ai(self, audience, category):
-        #model_name = "KaliumPotas/potas_recommend"
-        classifier = pipeline("text-classification", model=model_name)
-
+    def request_ai(audience, category):
         for c in Perfil.objects.all():
-            list_recommend = []
-            text = {
-                'audience': audience,
-                'category': category.name,
-                'area': c.area.name,
-                'sub_area': c.sub_area.name
+            data = {
+                "audience": audience,
+                "category": category,
+                "area": c.area.name,
+                "sub_area": c.sub_area.name
             }
-            result = classifier(text)
             
-        print(result)    
-        return result
-    """
+            try:
+                response = requests.post("http://127.0.0.1:8080/ai", json=data)
+            except BaseException as error:
+                return Response({"message": f"Error in request api: {error}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
             
+            if response.status_code == 200:
+                print(response.json())
+            else:
+                print(f"Has a error in api: {error}")
             
             
             

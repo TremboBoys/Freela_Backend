@@ -39,9 +39,6 @@ class SendCode(APIView):
         
         return Response({"message": "Code sent to your email!"}, status=status.HTTP_201_CREATED)
 
-        
-        
-
 class UserAPIView(APIView):
     def post(self, request):
         name = request.data.get('name')
@@ -59,10 +56,8 @@ class UserAPIView(APIView):
         try:
             if user_type == "contractor":
                 user_type_value = 2
-                user_group = contratante
             elif user_type == "freelancer":
                 user_type_value = 3
-                user_group = freelancer_group
             else:
                 return Response({"message": "Invalid user type"}, status=status.HTTP_400_BAD_REQUEST)
 
@@ -71,14 +66,12 @@ class UserAPIView(APIView):
                 password=password,
                 name=name, 
                 username=username, 
-                type_user=user_type_value
-            )            
-            user.groups.add(user_group)
+                type_user = user_type_value
+            )
+            
+            user.groups.add(user_type_value)            
             user.save()
-
-            user_data = UserSerializer(user).data
-
-            return Response(user_data, status=status.HTTP_201_CREATED)
+            return Response(UserSerializer(user).data, status=status.HTTP_201_CREATED)
         except Exception as error:
             print(error)
             return Response({"message": str(error)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
