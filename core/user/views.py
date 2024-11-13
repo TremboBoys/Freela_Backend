@@ -76,7 +76,9 @@ class UserAPIView(APIView):
             user.groups.add(user_group)
             user.save()
 
-            return Response({"message": "User created successfully"}, status=status.HTTP_201_CREATED)
+            user_data = UserSerializer(user).data
+
+            return Response(user_data, status=status.HTTP_201_CREATED)
         except Exception as error:
             print(error)
             return Response({"message": str(error)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
@@ -105,8 +107,6 @@ class UserAPIView(APIView):
             user = User.objects.get(email=email)
         except User.DoesNotExist:
             return Response({"message": "User doesn't exists"}, status=status.HTTP_404_NOT_FOUND)
-
-        
         
         if update_type == 'password':
             password = request.data.get('password')
@@ -132,8 +132,9 @@ class UserAPIView(APIView):
                     user.groups.add(contratante)
             except Exception as error:
                 return Response({"message": f"Error update user: {str(error)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
-            message = "Updated user type!"
+        
+            message = "Updated user type!" 
+            
         elif update_type == "email":
             newEmail = request.data.get('email')
             

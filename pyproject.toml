@@ -5,7 +5,6 @@ description = "Default template for PDM package"
 authors = [
     {name = "kauabarros-24", email = "martinsbarroskaua@gmail.com"},
     {name = "", email = ""},
-    {name = "kaubarros-24", email = "martinsbarroskaua@gmail.com"},
 ]
 dependencies = [
     "django>=5.1.1",
@@ -31,6 +30,7 @@ dependencies = [
     "pdm>=2.20.1",
     "fastapi>=0.115.5",
     "pipeline>=0.1.0",
+
 ]
 requires-python = "==3.11.*"
 readme = "README.md"
