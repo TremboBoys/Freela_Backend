@@ -3,6 +3,9 @@
 from pathlib import Path
 from datetime import timedelta
 import cloudinary, cloudinary.uploader
+from cloudinary_storage.storage import MediaCloudinaryStorage
+
+
 import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -16,10 +19,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-(m*#e0fjcj1))gg$gx_ox3&m^q^zx_95-m@r2dy-t^i8)wbp)j'
 
 # SECURITY WARNING: don't run with debug turned on in production!
+
+ALLOWED_HOSTS = ['*']
+
 DEBUG = True
-
-ALLOWED_HOSTS = []
-
 
 # Application definition
 
@@ -47,6 +50,7 @@ INSTALLED_APPS = [
     'langdetect',
     'sentencepiece',
     'django_filters',
+    'cloudinary_storage',
 ]
 
 MIDDLEWARE = [
@@ -126,7 +130,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
@@ -158,13 +162,14 @@ REST_FRAMEWORK = {
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",  
     "http://localhost:5173",
+    ""
 ]
 
-cl = cloudinary.config(
-    cloud_name='dm2odcrnf',
-    api_key='392291948516824',
-    api_secret='8L8ApfYnDq6_YiXSd4lAgDmZGnI'
-)
+CLOUDINARY_STORAGE = {
+    "CLOUD_NAME": 'dm2odcrnf',
+    "API_KEY": '392291948516824',
+    "API_SECRET": '8L8ApfYnDq6_YiXSd4lAgDmZGnI'
+}
 
 
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
@@ -175,3 +180,8 @@ EMAIL_HOST_USER = "martinsbarroskaua85@gmail.com"
 EMAIL_HOST_PASSWORD = "hlgx xdmn prhf areg"
 
 APPEND_SLASH = False
+
+DEFAULT_FILE_STORAGE = "cloudinary_storage.storage.MediaCloudinaryStorage"
+
+MEDIA_URL = '/media/'
+STATICFILES_STORAGE = 'cloudinary_storage.storage.StaticHashedCloudinaryStorage'
