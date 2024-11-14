@@ -34,7 +34,7 @@ class Image(models.Model):
     @property
     def url(self) -> str:
         file_url = self.file.url
-
+        
         if default_storage.exists(self.file.name):
             with default_storage.open(self.file.name, "rb") as image_file:
                 image_data = image_file.read()
