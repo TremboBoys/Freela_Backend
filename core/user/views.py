@@ -113,7 +113,7 @@ class UserAPIView(APIView):
         elif update_type == "user_type":
             user_type = request.data.get('type')
             if user_type == "admin":
-                return Response({"message": "Not authorized!"}, status=status.HTTP_423_LOCKED)
+               return Response({"message": "Not authorized!"}, status=status.HTTP_423_LOCKED)
             try:
                 if user_type == "freelancer":
                     user.type_user = 3
@@ -126,7 +126,7 @@ class UserAPIView(APIView):
             except Exception as error:
                 return Response({"message": f"Error update user: {str(error)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         
-            message = "Updated user type!" 
+            message = "Updated user type!"
             
         elif update_type == "email":
             newEmail = request.data.get('email')
