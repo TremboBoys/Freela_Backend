@@ -1,5 +1,5 @@
 from rest_framework.viewsets import ModelViewSet
-from core.perfil.serializer import PerfilListSerializer, PerfilDetailSerializer, ProSerializer, MyCompetencySerializer, MyProjectSerializer, NacionalitySerializer, AreaSerializer,SubAreaSerializer, HabilitySerializer, ChoiceProjectSerializer
+from core.perfil.serializer import PerfilSerializer ,ProSerializer, MyCompetencySerializer, MyProjectSerializer, NacionalitySerializer, AreaSerializer,SubAreaSerializer, HabilitySerializer, ChoiceProjectSerializer
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.core.mail import send_mail
@@ -15,6 +15,7 @@ class ChoiceProjectView(ModelViewSet):
 
 class PerfilView(ModelViewSet):
     queryset = Perfil.objects.all()
+    serializer_class = PerfilSerializer
 
     @receiver(post_save, sender=Perfil)
     def sendEmailUpdate(sender, instance, created, **kwargs):
@@ -30,12 +31,7 @@ class PerfilView(ModelViewSet):
                 from_email=from_email
             )
     
-    def get_serializer_class(self):
-        if self.action == 'retrieve':
-            return PerfilDetailSerializer
-        elif self.action == 'list':
-            return PerfilListSerializer
-        return PerfilDetailSerializer
+    
     
 class ProView(ModelViewSet):
     queryset = Pro.objects.all()

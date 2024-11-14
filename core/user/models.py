@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser, Group, Permission
+    
 class User(AbstractUser):
     name = models.CharField(max_length=45)
     username = models.CharField(max_length=45, unique=True)

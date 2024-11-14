@@ -1,7 +1,9 @@
 import mimetypes
 import uuid
-
 from django.db import models
+import base64
+from django.core.files.storage import default_storage
+from django.core.files.base import ContentFile
 
 
 def image_file_path(image, _) -> str:
@@ -13,19 +15,14 @@ def image_file_path(image, _) -> str:
 
 class Image(models.Model):
     attachment_key = models.UUIDField(
-        max_length=255,
         default=uuid.uuid4,
         unique=True,
-        help_text=("Used to attach the image to another object. " "Cannot be used to retrieve the image file."),
+        help_text="Used to attach the image to another object. Cannot be used to retrieve the image file.",
     )
     public_id = models.UUIDField(
-        max_length=255,
         default=uuid.uuid4,
         unique=True,
-        help_text=(
-            "Used to retrieve the image itself. "
-            "Should not be readable until the image is attached to another object."
-        ),
+        help_text="Used to retrieve the image itself. Should not be readable until the image is attached to another object.",
     )
     file = models.ImageField(upload_to=image_file_path)
     description = models.CharField(max_length=255, blank=True)
@@ -36,4 +33,12 @@ class Image(models.Model):
 
     @property
     def url(self) -> str:
-        return self.file.url  # pylint: disable=no-member
+        file_url = self.file.url
+
+        if default_storage.exists(self.file.name):
+            with default_storage.open(self.file.name, "rb") as image_file:
+                image_data = image_file.read()
+                base64_encoded = base64.b64encode(image_data).decode("utf-8")
+                return f"data:image/png;base64,{base64_encoded}"
+        else:
+            return "Image not found!"
