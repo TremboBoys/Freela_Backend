@@ -114,7 +114,7 @@ class UserAPIView(APIView):
         elif update_type == "user_type":
             user_type = request.data.get('type')
             if user_type == "admin":
-                return Response({"message": "Not authorized!"}, status=status.HTTP_423_LOCKED)
+               return Response({"message": "Not authorized!"}, status=status.HTTP_423_LOCKED)
             try:
                 if user_type == "freelancer":
                     user.type_user = 3

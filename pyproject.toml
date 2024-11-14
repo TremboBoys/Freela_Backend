@@ -21,6 +21,7 @@ dependencies = [
     "django-filter>=24.3",
     "pdm>=2.20.1",
     "django-cloudinary-storage>=0.3.0",
+    "whitenoise>=6.8.2",
 ]
 requires-python = "==3.11.*"
 readme = "README.md"
