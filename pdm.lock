@@ -16,6 +16,7 @@ lock_version = "4.5.0"
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 content_hash = "sha256:08faf3a10becce3157ed228f7ce2bb837511bc1753d853c92ebab9e83293d034"
 =======
 content_hash = "sha256:6fcbef17c67fbff0f595ff9a7668f4ccd74474e250bd9e6e54cfd2b95a3f0574"
@@ -49,6 +50,9 @@ content_hash = "sha256:2e88cb1c268a33257a72a7aaa1eaa6ae35152a4396b26cc6e809df249
 =======
 content_hash = "sha256:5fc4311e3c86b051e857d040e34dd99f53cbcace152285ed61573b8038b32ffa"
 >>>>>>> c7953fc (CHORE: Save static files in cloudinary)
+=======
+content_hash = "sha256:7b9037d4b52c846358e9ad75eb4f65e0409c02919a79e872297dcfdab361d951"
+>>>>>>> 211b30b (CHORE: Changed db from sqlite3 to postgresql)
 
 [[metadata.targets]]
 requires_python = "==3.11.*"
@@ -345,6 +349,20 @@ groups = ["default"]
 files = [
     {file = "distlib-0.3.9-py2.py3-none-any.whl", hash = "sha256:47f8c22fd27c27e25a65601af709b38e4f0a45ea4fc2e710f65755fa8caaaf87"},
     {file = "distlib-0.3.9.tar.gz", hash = "sha256:a60f20dea646b8a33f3e7772f74dc0b2d0772d2837ee1342a00645c81edf9403"},
+]
+
+[[package]]
+name = "dj-database-url"
+version = "2.3.0"
+summary = "Use Database URLs in your Django Application."
+groups = ["default"]
+dependencies = [
+    "Django>=4.2",
+    "typing-extensions>=3.10.0.0",
+]
+files = [
+    {file = "dj_database_url-2.3.0-py3-none-any.whl", hash = "sha256:bb0d414ba0ac5cd62773ec7f86f8cc378a9dbb00a80884c2fc08cc570452521e"},
+    {file = "dj_database_url-2.3.0.tar.gz", hash = "sha256:ae52e8e634186b57e5a45e445da5dc407a819c2ceed8a53d1fac004cc5288787"},
 ]
 
 [[package]]
@@ -1410,6 +1428,7 @@ files = [
 [[package]]
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> 1a278ef (RESTARTED APLICATION)
 =======
 name = "psycopg"
@@ -1440,6 +1459,8 @@ files = [
 ]
 
 [[package]]
+=======
+>>>>>>> 211b30b (CHORE: Changed db from sqlite3 to postgresql)
 name = "psycopg2-binary"
 version = "2.9.10"
 requires_python = ">=3.8"
@@ -1462,9 +1483,12 @@ files = [
 ]
 
 [[package]]
+<<<<<<< HEAD
 >>>>>>> 64208b1 (CHORE: Update dependencies in pyproject.toml)
 =======
 >>>>>>> 3a0d00a (CHORE: Static file saved in cloudinary)
+=======
+>>>>>>> 211b30b (CHORE: Changed db from sqlite3 to postgresql)
 name = "pycparser"
 version = "2.22"
 requires_python = ">=3.8"
