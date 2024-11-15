@@ -5,7 +5,8 @@ from core.project.models import Project
 from core.proposal.models import AcceptProposal
 from rest_framework.response import Response
 from rest_framework import status
-class ProjectView(ModelViewSet):
+from utils.viewset.project_view import ProjectModelViewSet
+class ProjectView(ProjectModelViewSet):
     queryset = Project.objects.all()
     serializer_class = ProjectSerializer
 
