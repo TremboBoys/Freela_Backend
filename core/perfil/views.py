@@ -15,24 +15,7 @@ class ChoiceProjectView(ModelViewSet):
 
 class PerfilView(ModelViewSet):
     queryset = Perfil.objects.all()
-    serializer_class = PerfilSerializer
-
-    @receiver(post_save, sender=Perfil)
-    def sendEmailUpdate(sender, instance, created, **kwargs):
-        message = "Seu perfil foi alterado"
-        subject = f"Olá {instance.user.name}!, seu perfil sofreu algumas alterações!"
-        recipient_list = [instance.user.email]
-        from_email = "martinsbarroskaua85@gmail.com"
-        if not created:
-            send_mail(
-                message=message,
-                subject=subject,
-                recipient_list=recipient_list,
-                from_email=from_email
-            )
-    
-    
-    
+    serializer_class = PerfilSerializer     
 class ProView(ModelViewSet):
     queryset = Pro.objects.all()
     serializer_class = ProSerializer

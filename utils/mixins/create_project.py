@@ -48,9 +48,7 @@ class CreateServiceModelMixin:
                 
             if response.status_code == 200:
                 resp = response.json()
-                score = resp['message'][0]['score']
-                print(score)
-                
+                score = resp['message'][0]['score']                
                 if score >= 0.85:
                     list_recommend.append(c.pk)
             else:
