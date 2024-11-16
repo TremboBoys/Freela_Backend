@@ -9,5 +9,5 @@ class ProjectSerializer(ModelSerializer):
         fields = "__all__"
 
     def get_specific_data(self, obj):
-        return [obj.get('theme'), obj.get('title'), obj.get('context')]
+        return [obj.theme, obj.title, obj.context]
         

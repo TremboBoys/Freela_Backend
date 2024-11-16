@@ -9,9 +9,10 @@ class CreateServiceModelMixin:
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+
         context = serializer.validated_data.get('context')
         description = serializer.validated_data.get('description')
-        headers = self.get_success_headers(serializer.data)
         
         list_recommend = self.ai_service(context=context, description=description)
         
@@ -20,7 +21,8 @@ class CreateServiceModelMixin:
             "datas of project": serializer.data,
             "recommend this service for theirs": list_recommend
         }
-        
+        headers = self.get_success_headers(serializer.data)
+
         return Response(resp, status=status.HTTP_201_CREATED, headers=headers)
 
     def perform_create(self, serializer):
@@ -53,5 +55,5 @@ class CreateServiceModelMixin:
                     list_recommend.append(c.pk)
             else:
                 print("There's a error in connection with AI")            
-            return list_recommend
+        return list_recommend
             
