@@ -8,7 +8,7 @@ from django.utils.html import strip_tags
 @receiver(post_save, sender=AcceptProposal)
 def accept_proposal_notification(sender, instance, created, **kwargs):
     if created:
-        subject = "Your proproposal is accept!"
+        subject = "Your proposal is accept!"
         
         html_message = render_to_string('proposal_accept.html', {
             'project_title': instance.proposal.project.title,
