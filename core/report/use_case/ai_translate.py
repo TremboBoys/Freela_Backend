@@ -3,10 +3,14 @@ import requests
 def ai_translate(text, target_language):
     if target_language == "English":
         target_language = "en"
+    print(text)
+    print(target_language)
+        
     data = {
         "text": text,
         "target_language": target_language
     }
+    print(data)
     
     try:
         response = requests.post("http://127.0.0.1:8090/ai", json=data)
