@@ -3,35 +3,20 @@ from rest_framework.serializers import ModelSerializer
 from core.perfil.models import Perfil, Hability, Nacionality, Area, SubArea, MyProjects, MyCompetency, Pro, ChoiceProject
 from core.user.models import User
 
-class UserNestedSerializer(ModelSerializer):
+class PerfilSerializer(ModelSerializer):
     class Meta:
-        model = User
-        fields = ['name', 'username']
-
-class NacionalitySerializer(ModelSerializer):
-    class Meta:
-        model = Nacionality
+        model = Perfil
         fields = "__all__"
 
-class PerfilCurrentSerializer(ModelSerializer):
+class PerfilCurrentUserSerializer(ModelSerializer):
     class Meta:
         model = Perfil
         fields = "__all__"
         depth = 1
 
-class PerfilListSerializer(ModelSerializer):
-    user = UserNestedSerializer()
-    nacionality = NacionalitySerializer()
-
+class NacionalitySerializer(ModelSerializer):
     class Meta:
-        model = Perfil
-        fields = ['user', 'nacionality', 'photo', 'about_me']
-
-class PerfilDetailSerializer(ModelSerializer):
-    user = UserNestedSerializer()
-    nacionality = NacionalitySerializer()
-    class Meta:
-        model = Perfil
+        model = Nacionality
         fields = "__all__"
         depth = 1
 

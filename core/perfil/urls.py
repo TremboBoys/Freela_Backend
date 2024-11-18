@@ -1,9 +1,10 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-from core.perfil.views import PerfilView, ProView, AreaView, SubAreaView, HabilityView, MyProjectsView, NacionalityView, MyCompetencyView, ChoiceProjectView
+from core.perfil.views import PerfilView, PerfilCurrentUserView, ProView, AreaView, SubAreaView, HabilityView, MyProjectsView, NacionalityView, MyCompetencyView, ChoiceProjectView
 
 router = DefaultRouter()
 router.register(r"perfil", PerfilView, basename="perfil")
+router.register(r"currentUser", PerfilCurrentUserView, basename="currentUser")
 router.register(r"pro", ProView, basename="Pro")
 router.register(r"area", AreaView, basename="area")
 router.register(r"subArea", SubAreaView, basename="subArea")
