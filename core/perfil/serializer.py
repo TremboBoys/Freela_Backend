@@ -3,10 +3,17 @@ from rest_framework.serializers import ModelSerializer
 from core.perfil.models import Perfil, Hability, Nacionality, Area, SubArea, MyProjects, MyCompetency, Pro, ChoiceProject
 from core.user.models import User
 
+class UserNestedSerializer(ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['name', 'username']
+
 class PerfilSerializer(ModelSerializer):
+    user = UserNestedSerializer()
     class Meta:
         model = Perfil
-        fields = "__all__"
+        fields = ['balance', 'is_public', 'user', 'price_per_hour', 'nacionality', 'photo', 'payment_type', 'about_me', 'area', 'sub_area']
+        depth = 1
 
 class PerfilCurrentUserSerializer(ModelSerializer):
     class Meta:
