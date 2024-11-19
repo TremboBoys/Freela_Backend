@@ -34,6 +34,7 @@ INSTALLED_APPS = [
     'rest_framework',  
     'corsheaders',     
     'simplejwt',
+    'core.pay',
     'core.user',
     'core.perfil',
     'core.project',
