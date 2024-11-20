@@ -2,6 +2,7 @@ import requests
 
 urlpix = "http://localhost:3000"
 
+
 def create_address(street_name, street_number, complement_address, cellphone_number, neighborhood_name, city_name, name_payer, email_payer, zip_code):
     data = {
         "street_name": street_name,
@@ -14,11 +15,13 @@ def create_address(street_name, street_number, complement_address, cellphone_num
         "email_payer": email_payer,
         "zip_code": zip_code 
     }
-    response = requests.post(f"{urlpix}/address", json=data)
     
-    if response.status_code == 200:
+    try:
+        response = requests.post(f"{urlpix}/address", json=data)
+        response.raise_for_status() 
         return True
-    else:
+    except requests.RequestException as e:
+        print(f"Erro ao criar endereço: {e}")
         return False
     
 def get_address(email):
