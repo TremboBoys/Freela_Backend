@@ -2,7 +2,9 @@
 
 from pathlib import Path
 from datetime import timedelta
-import cloudinary, cloudinary.uploader
+#import cloudinary, cloudinary.uploader
+
+
 import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -16,11 +18,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-(m*#e0fjcj1))gg$gx_ox3&m^q^zx_95-m@r2dy-t^i8)wbp)j'
 
 # SECURITY WARNING: don't run with debug turned on in production!
+
+ALLOWED_HOSTS = ['*']
+
 DEBUG = True
-
-ALLOWED_HOSTS = []
-
-
 # Application definition
 
 INSTALLED_APPS = [
@@ -49,6 +50,7 @@ INSTALLED_APPS = [
     'langdetect',
     'sentencepiece',
     'django_filters',
+    'cloudinary_storage',
 ]
 
 MIDDLEWARE = [
@@ -60,6 +62,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'corsheaders.middleware.CorsMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware'
 ]
 
 ROOT_URLCONF = 'config.urls'
@@ -91,7 +94,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
     }
-    }
+}
 
 
 # Password validation
@@ -124,6 +127,7 @@ USE_I18N = True
 
 USE_TZ = True
 
+CORS_ALLOW_ALL_ORIGINS = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
@@ -162,12 +166,16 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",
 ]
 
-cl = cloudinary.config(
-    cloud_name='dm2odcrnf',
-    api_key='392291948516824',
-    api_secret='8L8ApfYnDq6_YiXSd4lAgDmZGnI'
-)
-
+#CLOUDINARY_STORAGE = {
+#    "CLOUD_NAME": 'dm2odcrnf',
+#    "API_KEY": '392291948516824',
+#    "API_SECRET": '8L8ApfYnDq6_YiXSd4lAgDmZGnI'
+#}
+MEDIA_ENDPOINT = "/media/"
+CLOUDINARY_URL = 'https://console.cloudinary.com/pm/c-8f6c5d0d412fd7c17a48c2d9174667/media-explorer'
+DEFAULT_FILE_STORAGE = "cloudinary_storage.storage.MediaCloudinaryStorage"
+STATIC_ROOT = os.path.join(BASE_DIR, "images")
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 EMAIL_HOST = "smtp.gmail.com"
@@ -177,3 +185,5 @@ EMAIL_HOST_USER = "martinsbarroskaua85@gmail.com"
 EMAIL_HOST_PASSWORD = "hlgx xdmn prhf areg"
 
 APPEND_SLASH = False
+
+MEDIA_URL = '/media/'
