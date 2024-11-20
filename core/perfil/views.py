@@ -1,5 +1,7 @@
 from rest_framework.viewsets import ModelViewSet
-from core.perfil.serializer import PerfilSerializer ,ProSerializer, MyCompetencySerializer, MyProjectSerializer, NacionalitySerializer, AreaSerializer,SubAreaSerializer, HabilitySerializer, ChoiceProjectSerializer
+from django_filters.rest_framework import DjangoFilterBackend
+from core.perfil.serializer import PerfilSerializer, PerfilCurrentUserSerializer, ProSerializer, MyCompetencySerializer, MyProjectSerializer, NacionalitySerializer, AreaSerializer,SubAreaSerializer, HabilitySerializer, ChoiceProjectSerializer
+from .filters import PerfilFilter
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.core.mail import send_mail
@@ -30,8 +32,12 @@ class PerfilView(ModelViewSet):
                 recipient_list=recipient_list,
                 from_email=from_email
             )
-    
-    
+
+class PerfilCurrentUserView(ModelViewSet):
+    queryset = Perfil.objects.all()
+    serializer_class = PerfilCurrentUserSerializer
+    filter_backends = [DjangoFilterBackend]
+    filterset_class = PerfilFilter
     
 class ProView(ModelViewSet):
     queryset = Pro.objects.all()

@@ -8,10 +8,25 @@ class UserNestedSerializer(ModelSerializer):
         model = User
         fields = ['name', 'username']
 
+class PerfilSerializer(ModelSerializer):
+    user = UserNestedSerializer()
+    class Meta:
+        model = Perfil
+        fields = ['balance', 'is_public', 'user', 'price_per_hour', 'nacionality', 'photo', 'payment_type', 'about_me', 'area', 'sub_area']
+        depth = 1
+
+class PerfilCurrentUserSerializer(ModelSerializer):
+    class Meta:
+        model = Perfil
+        fields = "__all__"
+        depth = 1
+
 class NacionalitySerializer(ModelSerializer):
     class Meta:
         model = Nacionality
         fields = "__all__"
+        depth = 1
+
 class HabilitySerializer(ModelSerializer):
     class Meta:
         model = Hability
