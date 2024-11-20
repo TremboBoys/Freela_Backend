@@ -4,7 +4,7 @@ from rest_framework import status
 from core.pay.models import City, Address
 from core.perfil.models import Perfil
 from core.user.models import User
-from core.pay.use_case.pix import create_address
+from core.pay.use_case.pix import create_address, get_address
 from rest_framework.viewsets import ModelViewSet
 from core.pay.serializer import CitySerializer
 
@@ -42,6 +42,28 @@ class AddressAPIView(APIView):
             return Response({"message": "Cannot created address in address ms"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         
         return Response({"message": "Address created with successfully!"},status=status.HTTP_201_CREATED)
+
+    def get(self, request):
+        email = request.query_params.get('email')
+        perfil = Address.objects.filter(perfil__user__email=email).first()
+        
+        if not perfil:
+            return Response({"message": "email doesn't exists"}, status=status.HTTP_404_NOT_FOUND)      
+        
+        address = get_address(email=perfil.perfil.user.email)
+        
+        return Response({"message": address}, status=status.HTTP_200_OK)
+    
+    def put(self, request):
+        id_address = request.query_params.get('idAddress')
+        old_email = request.data.get('old_email')
+        new_email = request.data.get('new_email')
+        street_name = request.data.get('street_name')
+        street_number = request.data.get('street_number')
+        
+    
+        
+        
         
         
 

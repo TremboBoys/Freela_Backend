@@ -7,5 +7,5 @@ router.register("city", CityViewSet, basename="city")
 
 urlpatterns = [
     path("", include(router.urls)),
-    path("address", AddressAPIView.as_view(), name="address"),
+    path("address/", AddressAPIView.as_view(), name="address"),
 ]
