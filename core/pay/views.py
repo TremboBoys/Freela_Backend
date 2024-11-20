@@ -4,6 +4,7 @@ from rest_framework import status
 from core.pay.models import City, Address
 from core.perfil.models import Perfil
 from core.user.models import User
+from core.pay.use_case.pix import create_address
 
 class CityAPIView(APIView):
     def post(self, request):
@@ -38,66 +39,39 @@ class CityAPIView(APIView):
         
         return Response(cities, status=status.HTTP_200_OK)  
     
-from rest_framework.views import APIView
-from rest_framework.response import Response
-from rest_framework import status
-
 class AddressAPIView(APIView):
     def post(self, request):
-        required_fields = {
-            "email": request.data.get('email'),
-            "phone": request.data.get('phone'),
-            "street_name": request.data.get('street'),
-            "street_number": request.data.get('number'),
-            "complement": request.data.get('complement'),
-            "neighborhood_name": request.data.get('neighborhood'),
-            "zip_code": request.data.get('zip_code'),
-        }
+        email = request.data.get('email')
+        phone = request.data.get('phone')
+        street_name = request.data.get('street')
+        street_number = request.data.get('number')
+        complement = request.data.get('complement')
+        neighborhood_name = request.data.get('neighborhood')
+        zip_code = request.data.get('zip_code')
 
-        missing_fields = [key for key, value in required_fields.items() if not value]
-        if missing_fields:
-            return Response(
-                {"message": f"Missing fields: {', '.join(missing_fields)}"},
-                status=status.HTTP_400_BAD_REQUEST
-            )
+        if not all([email, phone, street_name, street_number, complement, neighborhood_name, zip_code]):
+            return Response({"message": "All fields are required"}, status=status.HTTP_400_BAD_REQUEST)
 
-        user = User.objects.filter(email=required_fields["email"]).first()
+        user = User.objects.filter(email=email).first()
         if not user:
-            return Response(
-                {"message": "User with the provided email not found."},
-                status=status.HTTP_404_NOT_FOUND
-            )
+            return Response({"message": "email not found"}, status=status.HTTP_404_NOT_FOUND)
 
         perfil = Perfil.objects.filter(user=user).first()
         if not perfil:
-            return Response(
-                {"message": "Profile for the given user not found."},
-                status=status.HTTP_404_NOT_FOUND
-            )
+            return Response({"message": "User not found"}, status=status.HTTP_404_NOT_FOUND)
 
-        city = City.objects.filter(zip_code=required_fields["zip_code"]).first()
+        city = City.objects.filter(zip_code=zip_code).first()
         if not city:
-            return Response(
-                {"message": "Invalid zip code. City not found."},
-                status=status.HTTP_404_NOT_FOUND
-            )
+            return Response({"message": "Invalid zip code"},status=status.HTTP_404_NOT_FOUND)
 
-        Address.objects.create(
-            city=city,
-            perfil=perfil,
-            neighborhood_name=required_fields["neighborhood_name"],
-            street_name=required_fields["street_name"],
-            street_number=required_fields["street_number"],
-            phone=required_fields["phone"],
-            complement=required_fields["complement"]
-        )
+        Address.objects.create(city=city, perfil=perfil, neighborhood_name=neighborhood_name, street_name=street_name, street_number=street_number, phone=phone, complement=complement)
 
-        return Response({"message": "Address created successfully!"}, status=status.HTTP_201_CREATED)
+        if not create_address(street_name=street_name, street_number=street_number, complement_address=complement, cellphone_number=phone, neighborhood_name=neighborhood_name, city_name=city.city, name_payer=perfil.user.name, email_payer=perfil.user.email, zip_code=zip_code):
+            return Response({"message": "Failed to create address on external service"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-        
-        
-        
-        
+        return Response({"message": "Address created"}, status=status.HTTP_201_CREATED)
+
+
         
             
     
