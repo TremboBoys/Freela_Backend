@@ -1,4 +1,5 @@
 import requests
+from core.pay.models import Address
 
 urlpix = "http://localhost:3000"
 
@@ -71,14 +72,31 @@ def get_address(email):
     
 result = get_address(email="joaovictor239090@gmail.com")
 print(result)
-    
 
+def create_transacation(amount, method, email_payer, type_data, number):
+    user = Address.objects.filter(perfil__user__email=email_payer).first
+    if not user:
+        raise ValueError("O email não procede")
+
+    data = {
+        "transaction_amount": amount,
+        "payment_method_id": method,
+        "payer": {
+            "email": email_payer,
+            "identification": {
+                "type": type_data,
+                "number": number
+            }
+        }
+    }
+    try:
+        response = requests.post(f"{urlpix}/transaction", json=data)
+        response.raise_for_status()
+    except requests.RequestException as error:
+        raise ValueError(error)
     
+    try:
+        return response.json()
+    except ValueError as error:
+        raise ValueError(error)
     
-    
-    
-    
-    
-    
-    
-        
