@@ -4,9 +4,10 @@ from rest_framework import status
 from core.pay.models import City, Address
 from core.perfil.models import Perfil
 from core.user.models import User
-from core.pay.use_case.pix import create_address, get_address
+from core.pay.use_case.pix import create_address, get_address, update_address
 from rest_framework.viewsets import ModelViewSet
 from core.pay.serializer import CitySerializer
+
 
 class CityViewSet(ModelViewSet):
     queryset = City.objects.all()
@@ -55,11 +56,51 @@ class AddressAPIView(APIView):
         return Response({"message": address}, status=status.HTTP_200_OK)
     
     def put(self, request):
-        id_address = request.query_params.get('idAddress')
-        old_email = request.data.get('old_email')
+        id_address = request.data.get('id_address')
+        old_email = request.query_params.get('email')
         new_email = request.data.get('new_email')
         street_name = request.data.get('street_name')
         street_number = request.data.get('street_number')
+        complement = request.data.get('complement_address') 
+        phone = request.data.get('cellphone_number')
+        neighborhood_name = request.data.get('neighborhood_name')
+        city = request.data.get('city_name')
+        name = request.data.get('name_payer')
+        zip_code = request.data.get('zip_code') 
+        
+        if not id_address or not old_email or not new_email or not street_name or not complement or not phone or not neighborhood_name or not city or not name or not zip_code or not street_number:
+            return Response({"message": "Datas required not offering"}, status=status.HTTP_400_BAD_REQUEST)
+
+        address = Address.objects.filter(perfil__user__email=old_email).first()
+        
+        if not address:
+            return Response({"message": "User not found"}, status=status.HTTP_404_NOT_FOUND)
+        
+        address.city.city = city
+        address.city.zip_code = zip_code
+        address.perfil.user.email = new_email        
+        address.save()
+        
+        success = update_address(
+            id_address=id_address,
+            street_name=street_name,
+            street_number=street_number,
+            complement_address=complement,
+            cellphone_number=phone,
+            neighborhood_name=neighborhood_name,
+            city_name=city,
+            name_payer=name,
+            email_payer=new_email,
+            zip_code=zip_code
+        )
+
+        if not success:
+            return Response({"message": "Failed to update external service"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+        return Response({"message": f"Address updated successfully: {success}"}, status=status.HTTP_200_OK)        
+        
+
+    
         
     
         
