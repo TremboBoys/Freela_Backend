@@ -1,6 +1,4 @@
 import requests
-from core.pay.models import Address
-from core.user.models import User
 
 urlpix = "http://localhost:3000"
 
@@ -58,6 +56,21 @@ def update_address(id_address, street_name, street_number, complement_address, c
     except requests.RequestException as e:
         print(f"Erro ao criar endereço: {e}")
         return False
+    
+def get_address(email):
+    try:
+        response = requests.get(f"{urlpix}/transaction/{email}")
+        response.raise_for_status()  
+    except requests.RequestException as error:
+        return {"error": f"There is an error in the external service: {error}"}
+    
+    try:
+        return response.json()
+    except ValueError:
+        return {"error": "Invalid JSON received from external service"}
+    
+result = get_address(email="joaovictor239090@gmail.com")
+print(result)
     
 
     
