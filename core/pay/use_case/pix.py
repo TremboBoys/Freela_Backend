@@ -1,7 +1,7 @@
 import requests
 from core.pay.models import Address
 
-urlpix = "http://localhost:3000"
+urlpix = "https://ms-pix.onrender.com"
 
 
 def create_address(street_name, street_number, complement_address, cellphone_number, neighborhood_name, city_name, name_payer, email_payer, zip_code):
@@ -73,7 +73,7 @@ def get_address(email):
 result = get_address(email="joaovictor239090@gmail.com")
 print(result)
 
-def create_transacation(amount, method, email_payer, type_data, number):
+def create_transaction(amount, method, email_payer, type_data, number):
     user = Address.objects.filter(perfil__user__email=email_payer).first
     if not user:
         raise ValueError("O email não procede")
@@ -99,4 +99,8 @@ def create_transacation(amount, method, email_payer, type_data, number):
         return response.json()
     except ValueError as error:
         raise ValueError(error)
-    
+
+
+
+
+
