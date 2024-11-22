@@ -1,4 +1,5 @@
 from rest_framework.serializers import ModelSerializer
+from rest_framework import serializers
 from core.perfil.models import Perfil, Hability, Nacionality, Area, SubArea, MyProjects, MyCompetency, Pro, ChoiceProject
 from core.user.models import User
 from uploader.serializers.image import ImageSerializer
@@ -14,12 +15,15 @@ class PerfilSerializer(ModelSerializer):
         model = Perfil
         fields = ['balance', 'is_public', 'user', 'price_per_hour', 'nacionality', 'photo', 'payment_type', 'about_me', 'area', 'sub_area']
         depth = 1
+        
 
 class PerfilCurrentUserSerializer(ModelSerializer):
     class Meta:
         model = Perfil
         fields = "__all__"
         depth = 1
+        
+        
 
 class NacionalitySerializer(ModelSerializer):
     class Meta:
