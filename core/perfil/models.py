@@ -39,9 +39,10 @@ class Perfil(models.Model):
     about_me = models.CharField(max_length=255, blank=True)
     area = models.ForeignKey(Area, on_delete=models.CASCADE, related_name="area", null=True, blank=True)
     sub_area = models.ForeignKey(SubArea, on_delete=models.CASCADE, related_name="sub_area")
-
+    number_projects_in_execution = models.IntegerField(null=True, blank=True)
     def __str__(self) -> str:
         return f"{self.about_me} - {self.balance}"
+    
 class MyCompetency(models.Model):
     perfil = models.ForeignKey(Perfil, on_delete=models.CASCADE)
     my_hability = models.ForeignKey(Hability, on_delete=models.CASCADE)

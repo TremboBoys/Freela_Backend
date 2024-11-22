@@ -24,7 +24,7 @@ class Proposal(models.Model):
 
     payement_type = models.IntegerField(("Pix"), choices=PaymentType.choices, default=PaymentType.PIX)
     language = models.ForeignKey(Language, on_delete=models.CASCADE)
-    my_competency = models.ForeignKey(MyCompetency, on_delete=models.CASCADE)
+    my_competency = models.ForeignKey(MyCompetency, on_delete=models.CASCADE, null=True, blank=True)
     delivery = models.DateField()
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
 class AcceptProposal(models.Model):
