@@ -2,6 +2,7 @@ from rest_framework.response import Response
 from core.project.models import Project
 from core.perfil.models import MyProjects, Perfil
 from rest_framework import status
+#from core.pay.use_case.pix import create_transacation
 import requests
 class UpdateReportModelMixin:
     def update(self, request, *args, **kwargs):

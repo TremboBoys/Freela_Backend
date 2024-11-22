@@ -15,4 +15,13 @@ class Address(models.Model):
     city = models.ForeignKey(City, on_delete=models.CASCADE)
 
     
+class Transaction(models.Model):
+    id_transaction = models.CharField(max_length=255)
+    perfil = models.ForeignKey(Perfil, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_created=True)
+    amount = models.DecimalField(max_digits=10, decimal_places=2)
+    
+    def __str__(self) -> str:
+        return self.id_transaction
+        
     
