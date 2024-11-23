@@ -1,7 +1,7 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from core.pay.models import City, Address
+from core.pay.models import City, Address, Transaction
 from core.perfil.models import Perfil
 from core.user.models import User
 from core.pay.use_case.pix import create_address, get_address, update_address
@@ -101,9 +101,24 @@ class AddressAPIView(APIView):
         
 
     
+class NotificationAPIView(APIView):
+    def patch(self, request):
+        status_approved = request.data.get('status')
+        status_detail = request.data.get('status_detail')
+        id_transaction = request.query_params.get('id_transaction')
         
+        transaction = Transaction.objects.filter(id_transaction=id_transaction).first()
+        if not transaction:
+            return Response({"message": "Transcation doesn't exists"}, status=status.HTTP_404_NOT_FOUND)
+        
+        if status_approved == 'approved' and status_detail == 'accredited':
+            transaction.is_paid == True
+            transaction.save()
+            return Response({"message": "Transaction finished"}, status=status.HTTP_200_OK)
+        
+        return Response({'message': 'error in transaction'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
     
-        
+
         
         
         

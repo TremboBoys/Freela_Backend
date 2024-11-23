@@ -1,5 +1,5 @@
 import requests
-from core.pay.models import Address
+from core.pay.models import Address, Transaction
 
 urlpix = "https://ms-pix.onrender.com"
 
@@ -72,9 +72,11 @@ def get_address(email):
     
 
 def create_transaction(amount, method, email_payer, type_data, number):
-    user = Address.objects.filter(perfil__user__email=email_payer).first
+    user = Address.objects.filter(perfil__user__email=email_payer).first()
     if not user:
         raise ValueError("O email não procede")
+    
+    
 
     data = {
         "transaction_amount": amount,
@@ -94,14 +96,10 @@ def create_transaction(amount, method, email_payer, type_data, number):
         raise ValueError(error)
     
     resp = response.json()
-    
-    data_transaction = {
-        "pix_copia_cola": resp['pix_copia_cola'],
-        "qrcode": resp['qrcode_base64']
-    }
-    
+    new_transaction = Transaction.objects.create(id_transaction=resp['id_transaction'], perfil=user.perfil, amount=amount)
+    new_transaction.save()
     try:
-        return data_transaction
+        return {"pix_copia_cola": resp['pix_copia_cola'], "qrcode": resp['qrcode_base64']}
     except ValueError as error:
         raise ValueError(error)
 
