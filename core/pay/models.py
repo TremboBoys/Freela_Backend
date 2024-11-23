@@ -1,5 +1,6 @@
 from django.db import models
 from core.perfil.models import Perfil
+from core.proposal.models import AcceptProposal
 
 class City(models.Model):
     country = models.CharField(max_length=255)
@@ -21,6 +22,7 @@ class Transaction(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     amount = models.DecimalField(max_digits=10, decimal_places=2)
     is_paid = models.BooleanField(default=False)
+    accept_proposal = models.ForeignKey(AcceptProposal, on_delete=models.CASCADE, null=True, blank=True)
         
     def __str__(self) -> str:
         return self.id_transaction

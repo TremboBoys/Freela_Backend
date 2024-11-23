@@ -71,7 +71,7 @@ def get_address(email):
         return {"error": "Invalid JSON received from external service"}
     
 
-def create_transaction(amount, method, email_payer, type_data, number):
+def create_transaction_with_project(amount, method, email_payer, type_data, number, accept_proposal):
     user = Address.objects.filter(perfil__user__email=email_payer).first()
     if not user:
         raise ValueError("O email não procede")
@@ -96,13 +96,11 @@ def create_transaction(amount, method, email_payer, type_data, number):
         raise ValueError(error)
     
     resp = response.json()
-    new_transaction = Transaction.objects.create(id_transaction=resp['id_transaction'], perfil=user.perfil, amount=amount)
+    new_transaction = Transaction.objects.create(id_transaction=resp['id_transaction'], perfil=user.perfil, amount=amount, accept_proposal=accept_proposal)
     new_transaction.save()
     try:
         return {"pix_copia_cola": resp['pix_copia_cola'], "qrcode": resp['qrcode_base64']}
     except ValueError as error:
         raise ValueError(error)
 
-result = create_transaction(amount=0.01, method="pix", email_payer="martinsbarroskaua85@gmail.com", type_data="cpf", number="12345678910")
-print(result)
 
