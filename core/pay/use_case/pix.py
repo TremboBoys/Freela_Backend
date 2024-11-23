@@ -70,8 +70,6 @@ def get_address(email):
     except ValueError:
         return {"error": "Invalid JSON received from external service"}
     
-result = get_address(email="joaovictor239090@gmail.com")
-print(result)
 
 def create_transaction(amount, method, email_payer, type_data, number):
     user = Address.objects.filter(perfil__user__email=email_payer).first
@@ -95,12 +93,18 @@ def create_transaction(amount, method, email_payer, type_data, number):
     except requests.RequestException as error:
         raise ValueError(error)
     
+    resp = response.json()
+    
+    data_transaction = {
+        "pix_copia_cola": resp['pix_copia_cola'],
+        "qrcode": resp['qrcode_base64']
+    }
+    
     try:
-        return response.json()
+        return data_transaction
     except ValueError as error:
         raise ValueError(error)
 
-
-
-
+result = create_transaction(amount=0.01, method="pix", email_payer="martinsbarroskaua85@gmail.com", type_data="cpf", number="12345678910")
+print(result)
 
