@@ -14,7 +14,7 @@ class ProjectView(ProjectModelViewSet):
     serializer_class = ProjectSerializer
     
 
-class FineshedProjectAPIView(APIView):
+class FinishedProjectAPIView(APIView):
     def patch(self, request):
         id_project = request.query_params.get('id') 
         cpf = request.data.get('cpf')
