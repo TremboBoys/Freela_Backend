@@ -7,5 +7,5 @@ router.register(r"Projetos", ProjectView, basename="Projetos")
 
 urlpatterns = [
     path("", include(router.urls)),
-    path("finalizar/",  FinishedProjectAPIView.as_view(), name="Finished")
+    path("fineshed/",  FinishedProjectAPIView.as_view(), name="Finished")
 ]
