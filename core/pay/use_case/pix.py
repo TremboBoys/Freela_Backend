@@ -103,4 +103,35 @@ def create_transaction_with_project(amount, method, email_payer, type_data, numb
     except ValueError as error:
         raise ValueError(error)
 
-
+def create_transaction_with_service(amount, method, email_payer, type_data, number, service):
+    user = Address.objects.filter(perfil__user__email=email_payer).first()
+    if not user:
+        raise ValueError("O email não procede")
+    
+    
+    
+    data = {
+        "transaction_amount": amount,
+        "payment_method_id": method,
+        "payer": {
+            "email": email_payer,
+            "identification": {
+                "type": type_data,
+                "number": number
+            }
+        }
+    }
+    try:
+        response = requests.post(f"{urlpix}/transaction", json=data)
+        response.raise_for_status()
+    except requests.RequestException as error:
+        raise ValueError(error)
+    
+    resp = response.json()
+    new_transaction = Transaction.objects.create(id_transaction=resp['id_transaction'], perfil=user.perfil, amount=amount, service=service)
+    new_transaction.save()
+    try:
+        return {"pix_copia_cola": resp['pix_copia_cola'], "qrcode": resp['qrcode_base64']}
+    except ValueError as error:
+        raise ValueError(error)
+    

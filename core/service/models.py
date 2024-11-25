@@ -8,4 +8,4 @@ class ContractService(models.Model):
         MONTH = 2, "Month"
         YEAR = 3, "YEAR"
     type_of_service = models.IntegerField(("Type of user"), choices=TypeOfService.choices, default=TypeOfService.FREE)
-
+    is_paid = models.BooleanField(default=False, null=True, blank=True)

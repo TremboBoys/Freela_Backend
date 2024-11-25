@@ -1,6 +1,7 @@
 from django.db import models
 from core.perfil.models import Perfil
 from core.proposal.models import AcceptProposal
+from core.service.models import ContractService
 
 class City(models.Model):
     country = models.CharField(max_length=255)
@@ -14,6 +15,11 @@ class City(models.Model):
 class Address(models.Model):
     perfil = models.ForeignKey(Perfil, on_delete=models.CASCADE)    
     city = models.ForeignKey(City, on_delete=models.CASCADE)
+    cpf = models.CharField(max_length=11, null=True, blank=True)
+    
+    def __str__(self) -> str:
+        return self.cpf
+    
 
 
 class Transaction(models.Model):
@@ -23,7 +29,7 @@ class Transaction(models.Model):
     amount = models.DecimalField(max_digits=10, decimal_places=2)
     is_paid = models.BooleanField(default=False)
     accept_proposal = models.ForeignKey(AcceptProposal, on_delete=models.CASCADE, null=True, blank=True)
-        
+    service = models.ForeignKey(ContractService, on_delete=models.CASCADE, null=True, blank=True)
     def __str__(self) -> str:
         return self.id_transaction
             

@@ -8,6 +8,7 @@ from core.pay.use_case.pix import create_address, get_address, update_address
 from rest_framework.viewsets import ModelViewSet
 from core.pay.serializer import CitySerializer
 from core.project.models import Project
+from core.service.models import ContractService
 
 
 class CityViewSet(ModelViewSet):
@@ -110,13 +111,22 @@ class NotificationAPIView(APIView):
         
         transaction = Transaction.objects.filter(id_transaction=id_transaction).first()
         if not transaction:
-            return Response({"message": "Transaction not found"}, status=status.HTTP_404_NOT_FOUND)
+                return Response({"message": "Transaction not found"}, status=status.HTTP_404_NOT_FOUND)
         
         if status_approved == "approved" or status_detail == "accredited":
             if transaction.accept_proposal is not None:
                 project = Project.objects.filter(pk=transaction.accept_proposal.proposal.project.pk).first()
                 project.status = 3
                 transaction.is_paid == True
+                
+            elif transaction.service is not None:
+                service = ContractService.objects.filter(contractor=transaction.perfil).first()
+                if not service:
+                    return Response({"message": "Service not found"}, status=status.HTTP_404_NOT_FOUND)
+                if service.type_of_service == 2:
+                    service.is_paid == True
+                    service.save()
+                    
         else:
             return Response({'message': "Payment there is a problem! transaction ir reject or cancelled for payer!"}, status=status.HTTP_402_PAYMENT_REQUIRED)
         
