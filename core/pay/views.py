@@ -119,6 +119,7 @@ class NotifcationAPIView(APIView):
          
         if status_approved == "approved" or status_accredited == "accredited":   
             if transaction.accept_proposal is not None:
+                transaction.is_paid = True
                 transaction.accept_proposal.proposal.project.status = 3
                 transaction.accept_proposal.proposal.perfil.balance += transaction.amount
                 my_projects = MyProjects.objects.get(project=transaction.accept_proposal.proposal.project)
@@ -128,11 +129,17 @@ class NotifcationAPIView(APIView):
                 transaction.accept_proposal.proposal.perfil.save()
                 
     
-            if transaction.service is not None:
+            elif transaction.service is not None:
+                transaction.is_paid = True
                 transaction.service.is_paid = True
                 transaction.perfil.is_pro = True
                 transaction.service.save()
                 transaction.perfil.save()
+            elif transaction.ads is not None:
+                transaction.is_paid = True
+                transaction.ads.is_paid = True
+                transaction.ads.save()
+                transaction.save()
                 
             
             

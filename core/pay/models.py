@@ -2,6 +2,7 @@ from django.db import models
 from core.perfil.models import Perfil
 from core.proposal.models import AcceptProposal
 from core.service.models import ContractService
+from core.ads.models import Ads
 
 class City(models.Model):
     country = models.CharField(max_length=255)
@@ -32,7 +33,8 @@ class Transaction(models.Model):
     service = models.ForeignKey(ContractService, on_delete=models.CASCADE, null=True, blank=True)
     method = models.CharField(max_length=255, null=True, blank=True)
     number = models.CharField(max_length=255)
-   
+    ads = models.ForeignKey(Ads, on_delete=models.CASCADE, null=True, blank=True)
+    
 
     
     def __str__(self) -> str:
