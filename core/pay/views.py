@@ -104,7 +104,7 @@ class AddressAPIView(APIView):
         
 
     
-class NotifcationAPIView(APIView):
+class NotificationAPIView(APIView):
     def patch(self, request):
         id_transaction = request.query_params.get('id_transaction')
         status_approved = request.data.get('status')

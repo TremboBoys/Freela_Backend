@@ -7,7 +7,7 @@ from uploader.serializers.image import ImageSerializer
 class UserNestedSerializer(ModelSerializer):
     class Meta:
         model = User
-        fields = ['name', 'username']
+        fields = ['name', 'username', 'email']
 
 class PerfilSerializer(ModelSerializer):
     user = UserNestedSerializer()
