@@ -116,13 +116,25 @@ class NotifcationAPIView(APIView):
         transaction = Transaction.objects.filter(id_transaction=id_transaction).first()
         if not transaction:
             return Response({"message": "A transacação não procede"},status=status.HTTP_404_NOT_FOUND)
-        if transaction.accept_proposal is not None:
-            transaction.accept_proposal.proposal.project.status = 3
-            transaction.accept_proposal.proposal.perfil.balance += transaction.amount
-            my_projects = MyProjects.objects.get(project=transaction.accept_proposal.proposal.project)
-            my_projects.in_execution == False
-            my_projects.save()
-            transaction.save()
+         
+        if status_approved == "approved" or status_accredited == "accredited":   
+            if transaction.accept_proposal is not None:
+                transaction.accept_proposal.proposal.project.status = 3
+                transaction.accept_proposal.proposal.perfil.balance += transaction.amount
+                my_projects = MyProjects.objects.get(project=transaction.accept_proposal.proposal.project)
+                my_projects.in_execution == False
+                my_projects.save()
+                transaction.accept_proposal.proposal.project.save()
+                transaction.accept_proposal.proposal.perfil.save()
+                
+    
+            if transaction.service is not None:
+                transaction.service.is_paid = True
+                transaction.perfil.is_pro = True
+                transaction.service.save()
+                transaction.perfil.save()
+                
+            
             
             
         

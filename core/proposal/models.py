@@ -27,6 +27,7 @@ class Proposal(models.Model):
     my_competency = models.ForeignKey(MyCompetency, on_delete=models.CASCADE, null=True, blank=True)
     delivery = models.DateField()
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True, null=True, blank=True)
 class AcceptProposal(models.Model):
     proposal = models.ForeignKey(Proposal, on_delete=models.CASCADE)
     date = models.DateTimeField(auto_now_add=True)

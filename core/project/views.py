@@ -14,6 +14,7 @@ class ProjectView(ProjectModelViewSet):
     queryset = Project.objects.all()
     serializer_class = ProjectSerializer
     
+    
 
 class FinishedProjectAPIView(APIView):
     def patch(self, request):
@@ -29,8 +30,8 @@ class FinishedProjectAPIView(APIView):
             transaction = create_transaction(objeto=objeto)
         except ValueError as err:
             return Response({"message": err}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-        
-        return Response({"message": "Finished your project!"}, status=status.HTTP_200_OK)
+    
+        return Response({"message": transaction}, status=status.HTTP_200_OK)
     
 
 

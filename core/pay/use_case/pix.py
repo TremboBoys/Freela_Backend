@@ -1,6 +1,7 @@
 import requests
 from core.pay.models import Address, Transaction
 from core.proposal.models import AcceptProposal
+from core.service.models import ContractService
 
 
 urlpix = "https://ms-pix.onrender.com"
@@ -93,9 +94,27 @@ def create_transaction(objeto: dict):
         resp = response.json()
         transaction = Transaction.objects.create(id_transaction=resp['id_transaction'], user=user.perfil, accept_proposal=project, amount=objeto['transaction_amount'], method=objeto['payment_method_id'], number=objeto['number'])
         transaction.save()
-        return resp
+        if objeto['payment_method_id'] == "pix":
+            return {"qr_code_base64": resp['qr_code_base64'], "pix_copia_cola": resp['pix_copia_cola']}
+        else:
+            return True
     if 'service_id' in objeto:
-        pass
+        transaction.save()
+        if objeto['service_id'] == 2:
+            service = ContractService.objects.create(type_service=2, perfil=user.perfil)
+            service.save()
+        else:
+            service = ContractService.objects.create(type_service=3, perfil=user.perfil)
+            service.save()
+        
+        transaction = Transaction.objects.create(id_transaction=resp['id_transaction'], user=user.perfil, service=service, amount=objeto['transaction_amount'], method=objeto['payment_method_id'], number=objeto['number'])
+        transaction.save()
+        if objeto['payment_method_id'] == "pix":
+            return {"qr_code_base64": resp['qr_code_base64'], "pix_copia_cola": resp['pix_copia_cola']}
+        else:
+            return True
+
+        
         
         
         

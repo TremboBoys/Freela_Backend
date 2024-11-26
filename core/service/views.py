@@ -6,9 +6,17 @@ from rest_framework import status
 from rest_framework.views import APIView
 from core.perfil.models import Perfil
 from core.pay.models import Address
-#from core.pay.use_case.pix import create_transaction_with_service
-from core.pay.models import Transaction
+from core.pay.use_case.pix import create_transaction
 class ContractServiceAPIView(APIView):
     def post(self, request):
-        pass
+        objeto = request.data.get('objeto')
+        if not objeto:
+            return Response({"message": "objeto is required"})
+        try:
+            transaction = create_transaction(objeto=objeto)
+        except ValueError as err:
+            return Response({'message': err})
         
+        return Response({"message": transaction}, status=status.HTTP_201_CREATED)
+        
+                

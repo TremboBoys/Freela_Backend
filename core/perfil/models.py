@@ -40,6 +40,8 @@ class Perfil(models.Model):
     area = models.ForeignKey(Area, on_delete=models.CASCADE, related_name="area", null=True, blank=True)
     sub_area = models.ForeignKey(SubArea, on_delete=models.CASCADE, related_name="sub_area")
     number_projects_in_execution = models.IntegerField(null=True, blank=True)
+    is_pro = models.BooleanField(default=False, null=True, blank=True)
+    
     def __str__(self) -> str:
         return f"{self.about_me} - {self.balance}"
     
