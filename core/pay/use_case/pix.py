@@ -95,7 +95,8 @@ def create_transaction(objeto: dict):
         transaction.save()
         return resp
     if 'service_id' in objeto:
-        p
+        pass
+        
         
         
 

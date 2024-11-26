@@ -14,9 +14,9 @@ class ContractService(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     def cancel_payment(self, *args, **kwargs):
-        if self.type_of_service == 2 and now() - self.created_at == 30:
+        if self.type_of_service == 2 and now() - self.created_at == 30 and self.is_paid == True:
             self.is_paid = False
             self.save()
-        elif self.type_of_service == 3 and now() - self.created_at == 365:
+        elif self.type_of_service == 3 and now() - self.created_at == 365 and self.is_paid == True:
             self.is_paid = False
             self.save()
