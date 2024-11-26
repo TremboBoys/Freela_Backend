@@ -8,7 +8,8 @@ from rest_framework import status
 from utils.viewset.project_view import ProjectModelViewSet
 from core.report.models import Report
 from core.pay.models import Address
-from core.pay.use_case.pix import create_transaction_with_project
+from core.pay.use_case.pix import create_transaction
+from core.report.models import Report
 class ProjectView(ProjectModelViewSet):
     queryset = Project.objects.all()
     serializer_class = ProjectSerializer
@@ -16,37 +17,21 @@ class ProjectView(ProjectModelViewSet):
 
 class FinishedProjectAPIView(APIView):
     def patch(self, request):
-        id_project = request.query_params.get('id') 
-        cpf = request.data.get('cpf')
-        email = request.data.get('freelancer_email')
-        
-        if not id_project:
-            return Response({"message": "id project is required"}, status=status.HTTP_404_NOT_FOUND)
-        if not cpf or not email:
-            return Response({'message': "Cpf and email is required"}, status=status.HTTP_404_NOT_FOUND)
-        
-        user = Address.objects.filter(address__perfil__user__email=email).first()
-        
-        if not user:
-            return Response({'message': "User not found"}, status=status.HTTP_404_NOT_FOUND)
-        
-        report = Report.objects.filter(accept_proposal__proposal__project__pk=id_project).last()
-        
+        objeto = request.query_params.get('objeto')
+        if not objeto:
+            return Response({"message": "The object is required"})
+        report = Report.objects.filter(accept_proposal__proposal__project__pk=objeto['project_id']).last()
         if not report:
-            return Response({"message": "Doesn't have a report for this project"}, status=status.HTTP_404_NOT_FOUND)
-        
+            return Response({"message": "There is a error in report"}, status=status.HTTP_404_NOT_FOUND)
         report.is_accept = True
         report.save()
-        
         try:
-            transaction = create_transaction_with_project(amount=report.accept_proposal.proposal.price, email_payer=user.perfil.user.email, type_data="cpf", number=cpf, method="pix", accept_proposal=report.accept_proposal)
+            transaction = create_transaction(objeto=objeto)
         except ValueError as err:
-            return Response({"message": f"There is a error in create_transaction"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            return Response({"message": err}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         
-        return Response({"message": transaction}, status=status.HTTP_200_OK)
-        
-            
-
+        return Response({"message": "Finished your project!"}, status=status.HTTP_200_OK)
+    
 
 
         

@@ -30,6 +30,11 @@ class Transaction(models.Model):
     is_paid = models.BooleanField(default=False)
     accept_proposal = models.ForeignKey(AcceptProposal, on_delete=models.CASCADE, null=True, blank=True)
     service = models.ForeignKey(ContractService, on_delete=models.CASCADE, null=True, blank=True)
+    method = models.CharField(max_length=255, null=True, blank=True)
+    number = models.CharField(max_length=255)
+   
+
+    
     def __str__(self) -> str:
         return self.id_transaction
             

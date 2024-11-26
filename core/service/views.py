@@ -6,7 +6,7 @@ from rest_framework import status
 from rest_framework.views import APIView
 from core.perfil.models import Perfil
 from core.pay.models import Address
-from core.pay.use_case.pix import create_transaction_with_service
+#from core.pay.use_case.pix import create_transaction_with_service
 from core.pay.models import Transaction
 class ContractServiceAPIView(APIView):
     def post(self, request):
@@ -23,8 +23,8 @@ class ContractServiceAPIView(APIView):
             type_service = 2
             new_service = ContractService.objects.create(type_service=type_service, contractor=user.perfil)
             new_service.save()
-            try:
-                new_transaction = create_transaction_with_service(email_payer=user.perfil.user.email, amount=30.00, service=new_service, cpf=user.cpf, type_data='cpf', method="pix")
-            except ValueError as err:
-                return Response({'message': str(err)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            #try:
+            #    new_transaction = create_transaction_with_service(email_payer=user.perfil.user.email, amount=30.00, service=new_service, cpf=user.cpf, type_data='cpf', method="pix")
+            #except ValueError as err:
+            #    return Response({'message': str(err)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
     

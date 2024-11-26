@@ -9,6 +9,7 @@ from rest_framework.viewsets import ModelViewSet
 from core.pay.serializer import CitySerializer
 from core.project.models import Project
 from core.service.models import ContractService
+from core.perfil.models import MyProjects
 
 
 class CityViewSet(ModelViewSet):
@@ -103,44 +104,25 @@ class AddressAPIView(APIView):
         
 
     
-class NotificationAPIView(APIView):
+class NotifcationAPIView(APIView):
     def patch(self, request):
-        status_approved = request.data.get('status')
-        status_detail = request.data.get('status_detail')
         id_transaction = request.query_params.get('id_transaction')
+        status_approved = request.data.get('status')
+        status_accredited = request.data.get('status_accredited')
+        
+        if not id_transaction or not status_approved or not status_accredited:
+            return Response({"message": "Você não me forneceu todos os dados que eu precisava"}, status=status.HTTP_400_BAD_REQUEST)
         
         transaction = Transaction.objects.filter(id_transaction=id_transaction).first()
         if not transaction:
-                return Response({"message": "Transaction not found"}, status=status.HTTP_404_NOT_FOUND)
-        
-        if status_approved == "approved" or status_detail == "accredited":
-            if transaction.accept_proposal is not None:
-                project = Project.objects.filter(pk=transaction.accept_proposal.proposal.project.pk).first()
-                project.status = 3
-                transaction.is_paid == True
-                
-            elif transaction.service is not None:
-                service = ContractService.objects.filter(contractor=transaction.perfil).first()
-                if not service:
-                    return Response({"message": "Service not found"}, status=status.HTTP_404_NOT_FOUND)
-                if service.type_of_service == 2:
-                    service.is_paid == True
-                    service.save()
-                    
-        else:
-            return Response({'message': "Payment there is a problem! transaction ir reject or cancelled for payer!"}, status=status.HTTP_402_PAYMENT_REQUIRED)
-        
-            
-                    
-        
-
-    
-    
-
-
-
-        
-            
-    
+            return Response({"message": "A transacação não procede"},status=status.HTTP_404_NOT_FOUND)
+        if transaction.accept_proposal is not None:
+            transaction.accept_proposal.proposal.project.status = 3
+            transaction.accept_proposal.proposal.perfil.balance += transaction.amount
+            my_projects = MyProjects.objects.get(project=transaction.accept_proposal.proposal.project)
+            my_projects.in_execution == False
+            my_projects.save()
+            transaction.save()
             
             
+        
