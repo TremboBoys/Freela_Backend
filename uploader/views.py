@@ -18,3 +18,4 @@ class ImageUploadViewSet(CreateViewSet):
     queryset = Image.objects.all() 
     serializer_class = ImageUploadSerializer
     parser_classes = [parsers.FormParser, parsers.MultiPartParser]
+    

@@ -2,7 +2,7 @@ from core.user.models import User
 from django.db import models
 from core.project.models import Project
 from uploader.models.document import Document
-from uploader.models.image import Image
+#from uploader.models.image import Image
 
 
 class Nacionality(models.Model):
@@ -30,7 +30,7 @@ class Perfil(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="user")
     price_per_hour = models.DecimalField(decimal_places=2, max_digits=20, default=0)
     nacionality = models.ForeignKey(Nacionality, on_delete=models.CASCADE, related_name="nacionality")
-    photo = models.ForeignKey(Image, on_delete=models.CASCADE, related_name="photo", null=True, blank=True)
+    #photo = models.ForeignKey(Image, on_delete=models.CASCADE, related_name="photo", null=True, blank=True)
     class PaymentType(models.IntegerChoices):
         PIX = 1, "Pix"
         DEBITO = 2, "Debito"

@@ -2,7 +2,7 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.settings import api_settings
 from core.perfil.models import Perfil
-from uploader.models.image import Image
+#from uploader.models.image import Image
 import requests
 
 class CreateServiceModelMixin:

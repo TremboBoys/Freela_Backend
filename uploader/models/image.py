@@ -1,16 +1,17 @@
-import mimetypes
 import uuid
 from django.db import models
-import base64
-from django.core.files.storage import default_storage
-from django.core.files.base import ContentFile
+from cloudinary.uploader import upload
+from cloudinary.utils import cloudinary_url
+import cloudinary
 
 
-def image_file_path(image, _):
-    extension: str = mimetypes.guess_extension(image.file.file.content_type)
-    if extension == ".jpe":
-        extension = ".jpg"
-    return f"images/{image.public_id}{extension or ''}"
+# Configuração do Cloudinary
+cloudinary.config(
+    cloud_name="dm2odcrnf",
+    api_key="392291948516824",
+    api_secret="8L8ApfYnDq6_YiXSd4lAgDmZGnI",
+)
+
 
 
 class Image(models.Model):
@@ -19,34 +20,34 @@ class Image(models.Model):
         unique=True,
         help_text="Used to attach the image to another object. Cannot be used to retrieve the image file.",
     )
-    public_id = models.UUIDField(
-        default=uuid.uuid4,
+    public_id = models.CharField(
+        max_length=255,
+        blank=True,
+        null=True,
         unique=True,
-        help_text="Used to retrieve the image itself. Should not be readable until the image is attached to another object.",
+        help_text="Public ID from Cloudinary, used to retrieve the image file.",
     )
-    file = models.ImageField(upload_to=image_file_path, blank=True, null=True)
+    file = models.ImageField(upload_to="image/", blank=True, null=True)
     description = models.CharField(max_length=255, blank=True)
     uploaded_on = models.DateTimeField(auto_now_add=True)
-    image_base64 = models.TextField(blank=True, null=True, help_text="Store the base64 encoded image.")
 
     def __str__(self) -> str:
         return f"{self.description} - {self.attachment_key}"
 
     def save(self, *args, **kwargs):
-        if self.file:
-            super().save(*args, **kwargs)
-            
-            with open(self.file.path, "rb") as image_file:
-                image_data = image_file.read()
-                self.image_base64 = base64.b64encode(image_data).decode("utf-8")
-        
+        if self.file and not self.public_id:
+            if hasattr(self.file.file, "size") and self.file.file.size > 0:
+                upload_result = upload(self.file.file, folder="images/")
+                self.public_id = upload_result.get("public_id")
+            else:
+                raise ValueError("Cannot upload an empty file.")
+
         super().save(*args, **kwargs)
 
     @property
     def url(self) -> str:
-        if self.image_base64:
-            return f"data:image/png;base64,{self.image_base64}"
-        elif self.file:
-            return self.file.url 
+        if self.public_id:
+            url, _ = cloudinary_url(self.public_id)
+            return url
         else:
-            return "Image not found!"
+            return "Image not found"
