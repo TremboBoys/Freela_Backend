@@ -10,7 +10,10 @@ from core.pay.serializer import CitySerializer
 from core.project.models import Project
 from core.service.models import ContractService
 from core.perfil.models import MyProjects
-
+from core.perfil.models import Perfil
+from core.perfil.serializer import PerfilSerializer
+import requests
+from core.pay.use_case.pix import urlpix
 
 class CityViewSet(ModelViewSet):
     queryset = City.objects.all()
@@ -142,6 +145,31 @@ class NotificationAPIView(APIView):
                 transaction.save()
                 
             return Response({"message": "Payment saved"}, status=status.HTTP_200_OK)
+        
+class RefreshTokenPaymentModelViewSet(ModelViewSet):
+    queryset = Perfil.objects.all()
+    serializer_class = PerfilSerializer
+    
+    def refreshToken(self, request):
+        if self.request.method == "PATCH":
+            email = requests.query_params.get('email')
+            if not email:
+                return Response({"message": "Email is required"}, status=status.HTTP_400_BAD_REQUEST)
+            
+            user = Perfil.objects.filter(email=email).first()
+            if not user:
+                return Response({"message": "User not found"}, status=status.HTTP_404_NOT_FOUND)
+            
+            try:
+                response = requests.post(f"{urlpix}/authClient/refresh")
+                pass
+            except Exception as error:
+                pass
+            
+            
+            
+            
+    
                 
             
             

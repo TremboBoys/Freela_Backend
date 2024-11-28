@@ -78,7 +78,6 @@ def get_address(email):
 def create_transaction(objeto: dict):
     user = Address.objects.filter(perfil__user__email=objeto['email_payer']).first()
     
-    
     if not user:
         raise ValueError("Usuário não existe")
     if 'project_id' in objeto:
