@@ -141,6 +141,8 @@ class NotificationAPIView(APIView):
                 transaction.ads.save()
                 transaction.save()
                 
+            return Response({"message": "Payment saved"}, status=status.HTTP_200_OK)
+                
             
             
             

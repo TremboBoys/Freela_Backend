@@ -77,6 +77,8 @@ def get_address(email):
 
 def create_transaction(objeto: dict):
     user = Address.objects.filter(perfil__user__email=objeto['email_payer']).first()
+    
+    
     if not user:
         raise ValueError("Usuário não existe")
     if 'project_id' in objeto:
@@ -84,6 +86,11 @@ def create_transaction(objeto: dict):
         if not project:
             raise ValueError('Proposta para esse projeto não encontrado')
         
+        receiver_money = project.proposal.perfil
+        give_money = project.proposal.project.contractor
+        
+        
+
         del objeto['project_id']
         del object['project_name']
         try:
@@ -119,7 +126,10 @@ def create_transaction(objeto: dict):
             raise ValueError("Não existe nenhum ads com esse id")
         transaction = Transaction.objects.create(id_transaction=resp['id_transaction'], user=user.perfil, ads=ads, amount=objeto['transaction_amount'], method=objeto['payment_method_id'], number=objeto['number'])
         transaction.save()
-        
+        if objeto['payment_method_id'] == "pix":
+            return {"qr_code_base64": resp['qr_code_base64'], "pix_copia_cola": resp['pix_copia_cola']}
+        else:
+            return True
         
         
         

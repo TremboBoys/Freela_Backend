@@ -30,7 +30,7 @@ class Perfil(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="user")
     price_per_hour = models.DecimalField(decimal_places=2, max_digits=20, default=0)
     nacionality = models.ForeignKey(Nacionality, on_delete=models.CASCADE, related_name="nacionality")
-    photo = models.ForeignKey(Image, on_delete=models.CASCADE, related_name="photo", null=True, blank=True)
+    #photo = models.ForeignKey(Image, on_delete=models.CASCADE, related_name="photo", null=True, blank=True)
     class PaymentType(models.IntegerChoices):
         PIX = 1, "Pix"
         DEBITO = 2, "Debito"
@@ -41,6 +41,12 @@ class Perfil(models.Model):
     sub_area = models.ForeignKey(SubArea, on_delete=models.CASCADE, related_name="sub_area")
     number_projects_in_execution = models.IntegerField(null=True, blank=True)
     is_pro = models.BooleanField(default=False, null=True, blank=True)
+    access_token_mercado_pago = models.CharField(max_length=255, null=True, blank=True)
+    refresh_token_mercado_pago = models.CharField(max_length=255, null=True, blank=True)
+    expiration_date_access_token_mercado_pago = models.CharField(max_length=255, null=True, blank=True)
+    expiration_date_refresh_token_mercado_pago = models.CharField(max_length=255, null=True, blank=True)
+    collector_id_mercado_pago = models.CharField(max_length=255, null=True, blank=True)
+    
     
     def __str__(self) -> str:
         return f"{self.about_me} - {self.balance}"
