@@ -2,19 +2,16 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from core.pay.models import City, Address, Transaction
-from core.perfil.models import Perfil
-from core.user.models import User
 from core.pay.use_case.pix import create_address, get_address, update_address
 from rest_framework.viewsets import ModelViewSet
 from core.pay.serializer import CitySerializer
-from core.project.models import Project
 from core.service.models import ContractService
-from core.perfil.models import MyProjects
-from core.perfil.models import Perfil
-from core.perfil.serializer import PerfilSerializer
+from core.perfil.models import MyProjects, Perfil
 import requests
 from core.pay.use_case.pix import urlpix
-
+from core.proposal.models import AcceptProposal
+from core.ads.models import Ads
+print(urlpix)
 class CityViewSet(ModelViewSet):
     queryset = City.objects.all()
     serializer_class = CitySerializer
@@ -106,8 +103,86 @@ class AddressAPIView(APIView):
         return Response({"message": f"Address updated successfully: {success}"}, status=status.HTTP_200_OK)        
         
 
-    
-class NotificationAPIView(APIView):
+class TransactionAPIView(APIView):
+    def post(self, request, *args, **kwargs):
+        data = request.data
+        print(data.get('payer'))
+        print(data.get('service_id'))
+        print(data)
+        if 'service_id' in data:
+            print('Mia Khalifa')
+        else:
+            print('Elle broke')
+        # Verificar o campo 'email_payer'
+        if not data.get('payer') or not data['payer'].get('email'):
+            return Response({"error": "O campo 'email_payer' é obrigatório."}, status=status.HTTP_400_BAD_REQUEST)
+        
+        try:
+            # Buscar o usuário com base no email do pagador
+            user = Address.objects.filter(perfil__user__email=data['payer']['email']).first()
+            if not user:
+                return Response({"error": "Usuário não encontrado com o email fornecido."}, status=status.HTTP_404_NOT_FOUND)
+            
+            # Caso haja 'project_id' no corpo da requisição
+            if 'project_id' in data:
+                project = AcceptProposal.objects.filter(proposal__pk=data['project_id']).first()
+                if not project:
+                    return Response({"error": "Proposta não encontrada para o projeto fornecido."}, status=status.HTTP_404_NOT_FOUND)
+                
+                response = self.create_pix_transaction(data)
+                transaction = Transaction.objects.create(
+                    id_transaction=response['id_transaction'],
+                    user=user.perfil,
+                    accept_proposal=project,
+                    amount=data['transaction_amount'],
+                    method=data['payment_method_id'],
+                    number=data.get('number')  # Adicionando 'number' de forma segura
+                )
+                transaction.save()
+                return Response(self.prepare_response(data, response), status=status.HTTP_201_CREATED)
+            
+            # Caso haja 'service_id' no corpo da requisição
+            elif 'service_id' in data:
+                service_type = data.get('service_id')
+                print(service_type, user.perfil)
+                service = ContractService.objects.create(type_of_service=service_type, contractor=user.perfil)
+                service.save()
+                response = self.create_pix_transaction(data)
+                transaction = Transaction.objects.create(
+                    id_transaction=response['id_transaction'],
+                    user=user.perfil,
+                    service=service,
+                    amount=data['transaction_amount'],
+                    method=data['payment_method_id'],
+                    number=data.get('number')
+                )
+                transaction.save()
+                del data['service_id']
+                return Response(self.prepare_response(data, response), status=status.HTTP_201_CREATED)
+            
+            # Caso haja 'ads_id' no corpo da requisição
+            elif 'ads_id' in data:
+                ads = Ads.objects.filter(pk=data['ads_id']).first()
+                if not ads:
+                    return Response({"error": "Anúncio não encontrado para o ID fornecido."}, status=status.HTTP_404_NOT_FOUND)
+
+                response = self.create_pix_transaction(data)
+                transaction = Transaction.objects.create(
+                    id_transaction=response['id_transaction'],
+                    user=user.perfil,
+                    ads=ads,
+                    amount=data['transaction_amount'],
+                    method=data['payment_method_id'],
+                    number=data.get('number')
+                )
+                transaction.save()
+                return Response(self.prepare_response(data, response), status=status.HTTP_201_CREATED)
+            else:
+                return Response({"error": "Nenhum identificador válido (project_id, service_id ou ads_id) foi fornecido."}, status=status.HTTP_400_BAD_REQUEST)
+        
+        except Exception as e:
+            return Response({"error": f"Ocorreu um erro: {str(e)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
     def patch(self, request):
         id_transaction = request.query_params.get('id_transaction')
         status_approved = request.data.get('status')
@@ -118,7 +193,7 @@ class NotificationAPIView(APIView):
         
         transaction = Transaction.objects.filter(id_transaction=id_transaction).first()
         if not transaction:
-            return Response({"message": "A transacação não procede"},status=status.HTTP_404_NOT_FOUND)
+            return Response({"message": "A transacção não procede"},status=status.HTTP_404_NOT_FOUND)
          
         if status_approved == "approved" or status_accredited == "accredited":   
             if transaction.accept_proposal is not None:
@@ -145,33 +220,20 @@ class NotificationAPIView(APIView):
                 transaction.save()
                 
             return Response({"message": "Payment saved"}, status=status.HTTP_200_OK)
-        
-class RefreshTokenPaymentModelViewSet(ModelViewSet):
-    queryset = Perfil.objects.all()
-    serializer_class = PerfilSerializer
+
+    def create_pix_transaction(self, data):
+        try:
+            
+            response = requests.post(f"{urlpix}/transaction", json=data)
+            response.raise_for_status()
+            return response.json()
+        except requests.RequestException as e:
+            raise ValueError(f"Erro ao criar transação PIX: {e}")
     
-    def refreshToken(self, request):
-        if self.request.method == "PATCH":
-            email = requests.query_params.get('email')
-            if not email:
-                return Response({"message": "Email is required"}, status=status.HTTP_400_BAD_REQUEST)
-            
-            user = Perfil.objects.filter(email=email).first()
-            if not user:
-                return Response({"message": "User not found"}, status=status.HTTP_404_NOT_FOUND)
-            
-            try:
-                response = requests.post(f"{urlpix}/authClient/refresh")
-                pass
-            except Exception as error:
-                pass
-            
-            
-            
-            
-    
-                
-            
-            
-            
-        
+    def prepare_response(self, data, response):
+        if data['payment_method_id'] == "pix":
+            return {
+                "qr_code_base64": response.get('qr_code_base64'),
+                "pix_copia_cola": response.get('pix_copia_cola')
+            }
+        return {"message": "Transação criada com sucesso."}

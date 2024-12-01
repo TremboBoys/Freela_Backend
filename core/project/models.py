@@ -45,6 +45,7 @@ class Project(models.Model):
     delivery = models.DateField(auto_now_add=True, null=True, blank=True)
     contractor = models.ForeignKey(User, on_delete=models.CASCADE, related_name="contractor")
     in_execution = models.BooleanField(default=False)
+    created_at = models.DateField(auto_now_add=True, null=True, blank=True)
     class Status(models.IntegerChoices):
         NOT_STARTED = 1, "It project isn't started"
         PEDING = 2, "It project is pending"
