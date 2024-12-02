@@ -46,7 +46,6 @@ INSTALLED_APPS = [
     'cloudinary',
     'requests',
     'uploader',
-    'sentencepiece',
     'django_filters',
     'cloudinary_storage',
     

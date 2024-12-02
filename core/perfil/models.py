@@ -90,4 +90,3 @@ class PerfilAvaliation(models.Model):
         related_name='received_evaluations'  
     )
     star_number = models.IntegerField()
-   
