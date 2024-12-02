@@ -6,8 +6,7 @@ from core.ads.models import Ads
 
 
 
-urlpix = 'http://localhost:3000'
-#"https://ms-pix.onrender.com"
+urlpix = "https://ms-pix.onrender.com"
 
 
 def create_address(street_name, street_number, complement_address, cellphone_number, neighborhood_name, city_name, name_payer, email_payer, zip_code):
