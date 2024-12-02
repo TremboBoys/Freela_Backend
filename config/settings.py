@@ -46,7 +46,6 @@ INSTALLED_APPS = [
     'cloudinary',
     'requests',
     'uploader',
-    'langdetect',
     'sentencepiece',
     'django_filters',
     'cloudinary_storage',
