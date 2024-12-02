@@ -12,9 +12,12 @@ class CreateAcceptProposalModelMixin:
         proposal = serializer.validated_data.get('proposal')
         if proposal.project.in_execution == True:
             return Response({"message": "Uma proposta para esse projeto já foi aceita"}, status=status.HTTP_423_LOCKED)
-        self.perform_create(serializer)
-        headers = self.get_success_headers(serializer.data)
-        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+            
+        else:
+            proposal.project.in_execution = True
+            self.perform_create(serializer)
+            headers = self.get_success_headers(serializer.data)
+            return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
     def perform_create(self, serializer):
         serializer.save()

@@ -5,8 +5,8 @@ from uploader.models.document import document_file_path
 
 
 class Report(models.Model):
-    title = models.CharField(max_length=255)
-    text_body = models.CharField(max_length=255)
+    title = models.CharField(max_length=1000, null=True, blank=True)
+    text_body = models.CharField(max_length=1000, null=True, blank=True)
     accept_proposal = models.ForeignKey(AcceptProposal, on_delete=models.CASCADE)
     is_accept = models.BooleanField(default=False)
 

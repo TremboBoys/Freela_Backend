@@ -1,10 +1,11 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser, Group, Permission
+    
 class User(AbstractUser):
-    name = models.CharField(max_length=45)
-    username = models.CharField(max_length=45, unique=True)
-    email = models.EmailField(max_length=45, unique=True)
-    password= models.CharField(max_length=45)
+    name = models.CharField(max_length=255)
+    username = models.CharField(max_length=255, unique=True)
+    email = models.EmailField(max_length=255, unique=True)
+    password= models.CharField(max_length=255)
     code = models.CharField(max_length=6, blank=True, null=True)
     class TypeUser(models.IntegerChoices):
         ADMIN = 1, "Admin"

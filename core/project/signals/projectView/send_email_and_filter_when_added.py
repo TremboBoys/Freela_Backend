@@ -1,46 +1,51 @@
 from core.project.models import Project
 from django.db.models.signals import post_save
 from django.dispatch import receiver
-from django.core.mail import send_mail
-from rest_framework.response import Response
-from rest_framework import status
-from core.perfil.models import Perfil
-from rest_framework.response import Response
-from core.perfil.models import Area
+from core.perfil.models import Perfil, Area
+from django.core.mail import EmailMultiAlternatives
+from django.template.loader import render_to_string
+from django.utils.html import strip_tags
+
 
 @receiver(post_save, sender=Project)
-def sendEmailWhenCreate(sender, instance, created, **kwargs):
+def filter_theme_area(sender, instance, created, **kwargs):
     if created:
-        message = f"Ei, você cadastrou um novo projeto!"
-        subject = "Novo projeto cadastrado"
-        recipient_list = [instance.contractor.email]
-        (recipient_list)
-        from_email = "martinsbarroskaua85@gmail.com"
+        filter_list = [instance.theme, instance.context, instance.description]
+        area = None
 
-        send_mail(
-            subject=subject,
-            message=message,
-            recipient_list=recipient_list,
-            from_email=from_email
-        )
-        id_area = Area.objects.get(name=instance.theme).pk
-        print(id_area)
-        users = Perfil.objects.filter(area=id_area)
-        print(users)
-        subject = 'Projeto do seu interesse'
-        message = f'Ei, há um projeto que possa ser do seu interesse: {instance.title}'
-        from_email = "martinsbarroskaua85@gmail.com"
-        recipient_list = [user.user.email for user in users]
-        print(recipient_list)
-        try:
-            send_mail (
-                recipient_list=recipient_list,
-                message=message,
-                from_email=from_email,
-                subject=subject
-            )
-        except Area.DoesNotExist:
-            return Response({"message": "Não existe nenhum usuário com essa classificação"}, status=status.HTTP_404_NOT_FOUND)
-        except BaseException as error:
-            return Response({"message": f"{error}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-        return Response({"email enviado!"})
+        for field_value in filter_list:
+            try:
+                area = Area.objects.get(name=field_value)
+                print(area)
+                break  
+            except Area.DoesNotExist:
+                print('1')
+                continue
+
+        if area:
+            recipient_list = [
+                perfil.user.email for perfil in Perfil.objects.filter(area=area)
+            ]
+            print(recipient_list)
+            if recipient_list:
+                html_message = render_to_string('bot_template.html', {
+                    'title': instance.title,
+                })
+                text_content = strip_tags(html_message)
+                from_email = "martinsbarroskaua85@gmail.com"
+                subject = "There's a project that may interest you!"
+
+                email = EmailMultiAlternatives(
+                    subject=subject,
+                    body=text_content,
+                    to=recipient_list,
+                    from_email=from_email,
+                )
+
+                try:
+                    email.attach_alternative(html_message, "text/html")
+                    print('jsjalka')
+                    email.send()
+                    print('email enviado')
+                except Exception as error:
+                    print(f"Error in sending project notification email: {error}")

@@ -2,9 +2,11 @@
 
 from pathlib import Path
 from datetime import timedelta
-import cloudinary, cloudinary.uploader
-import os
+#import cloudinary, cloudinary.uploader
 
+
+import os
+import dj_database_url
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -16,11 +18,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-(m*#e0fjcj1))gg$gx_ox3&m^q^zx_95-m@r2dy-t^i8)wbp)j'
 
 # SECURITY WARNING: don't run with debug turned on in production!
+
+ALLOWED_HOSTS = ['*']
+
 DEBUG = True
-
-ALLOWED_HOSTS = []
-
-
 # Application definition
 
 INSTALLED_APPS = [
@@ -33,6 +34,7 @@ INSTALLED_APPS = [
     'rest_framework',  
     'corsheaders',     
     'simplejwt',
+    'core.pay',
     'core.user',
     'core.perfil',
     'core.project',
@@ -46,6 +48,9 @@ INSTALLED_APPS = [
     'uploader',
     'langdetect',
     'sentencepiece',
+    'django_filters',
+    'cloudinary_storage',
+    
 ]
 
 MIDDLEWARE = [
@@ -57,6 +62,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'corsheaders.middleware.CorsMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware'
 ]
 
 ROOT_URLCONF = 'config.urls'
@@ -84,11 +90,12 @@ WSGI_APPLICATION = 'config.wsgi.application'
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
-    }
+    'default': dj_database_url.config(
+        default='postgresql://hackathon_k28t_user:N9FeBvPjSnde453f8FpWM0fP0caB2pb7@dpg-csrpe6bv2p9s73bg0c2g-a.ohio-postgres.render.com/hackathon_k28t',
+        conn_max_age=600,
+        ssl_require=True
+    )
+}
 
 
 # Password validation
@@ -121,6 +128,7 @@ USE_I18N = True
 
 USE_TZ = True
 
+CORS_ALLOW_ALL_ORIGINS = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
@@ -148,22 +156,27 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 #    'AUTH_HEADER_TYPES': ('Bearer',),
 #}
 
-#REST_FRAMEWORK = {
+REST_FRAMEWORK = {
 #    "DEFAULT_AUTHENTICATION_CLASSES": ("core.authentication.TokenAuthentication",), # Autenticação no passage.id
 #    "DEFAULT_PERMISSION_CLASSES": ("rest_framework.permissions.IsAuthenticated"), # Permissão total para usuários autenticados
-#}
+    'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend']
+}
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",  
     "http://localhost:5173",
 ]
 
-cl = cloudinary.config(
-    cloud_name='dm2odcrnf',
-    api_key='392291948516824',
-    api_secret='8L8ApfYnDq6_YiXSd4lAgDmZGnI'
-)
-
+#CLOUDINARY_STORAGE = {
+#    "CLOUD_NAME": 'dm2odcrnf',
+#    "API_KEY": '392291948516824',
+#    "API_SECRET": '8L8ApfYnDq6_YiXSd4lAgDmZGnI'
+#}
+MEDIA_ENDPOINT = "/media/"
+CLOUDINARY_URL = 'https://console.cloudinary.com/pm/c-8f6c5d0d412fd7c17a48c2d9174667/media-explorer'
+DEFAULT_FILE_STORAGE = "cloudinary_storage.storage.MediaCloudinaryStorage"
+STATIC_ROOT = os.path.join(BASE_DIR, "images")
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 EMAIL_HOST = "smtp.gmail.com"
@@ -172,6 +185,6 @@ EMAIL_USE_TLS = True
 EMAIL_HOST_USER = "martinsbarroskaua85@gmail.com"
 EMAIL_HOST_PASSWORD = "hlgx xdmn prhf areg"
 
-PASSAGE_APP_ID = 'RqVDnxkssH8vwNCSKmmCIl1b'
-PASSAGE_API_KEY = 'LS0tLS1CRUdJTiBSU0EgUFVCTElDIEtFWS0tLS0tCk1JSUJDZ0tDQVFFQTRGdTBYWFRXd1pXbkdWcTRMT0VRZXhZbjZHUDJNWnJsbzVSdFNLZHNsOXBIMEQvYllWanMKTWhoMWtQT3lPRGsrcjBxQ2Iwd3h6ZzlmYnNYb1kzWXgwUmR6NzBXckFybFRHc2JnV0l1V2lwOHhDem9wREZoWApKTkhDRENqZWFkSkpKY2l1QVgyVmdTMm4zc2thNnVWZ1I3QzNjUU5wK0FnRWpKMEEwUXAzZFBGc2RDdkFtbXpDCkVqWVg3UVdHSVBia0tCSUR3b1JKYk1CdXhkdlZTUitHYUU5cXFPS3VOSlF1Z3Q3Q1hXbnpGMEJxa2NlWjVSVmgKdXozRlJndHZjREpXVWNFcGgwTktVYjJsWGM1bmdDUTBrVEw0QXhKUzZyVmxzS3BxNXdnd2xPbFN1VFB6RlJENApZV1pncGNhL0tyNlc1Nks1ZmRTdFJrc2txUDhGRlY0UTdRSURBUUFCCi0tLS0tRU5EIFJTQSBQVUJMSUMgS0VZLS0tLS0K'
-AUTH_USER_MODEL = 'user.User'
+APPEND_SLASH = False
+
+MEDIA_URL = '/media/'

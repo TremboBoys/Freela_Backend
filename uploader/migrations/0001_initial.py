@@ -58,7 +58,7 @@ class Migration(migrations.Migration):
                         unique=True,
                     ),
                 ),
-                ("file", models.ImageField(upload_to=uploader.models.image.image_file_path)),
+                ("file", models.ImageField(upload_to="image/")),
                 ("description", models.CharField(blank=True, max_length=255)),
                 ("uploaded_on", models.DateTimeField(auto_now_add=True)),
             ],

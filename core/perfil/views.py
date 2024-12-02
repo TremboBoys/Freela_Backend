@@ -1,5 +1,7 @@
 from rest_framework.viewsets import ModelViewSet
-from core.perfil.serializer import PerfilSerializer, ProSerializer, MyCompetencySerializer, MyProjectSerializer, NacionalitySerializer, AreaSerializer,SubAreaSerializer, HabilitySerializer, ChoiceProjectSerializer
+from django_filters.rest_framework import DjangoFilterBackend
+from core.perfil.serializer import PerfilSerializer, PerfilCurrentUserSerializer, ProSerializer, MyCompetencySerializer, MyProjectSerializer, NacionalitySerializer, AreaSerializer,SubAreaSerializer, HabilitySerializer, ChoiceProjectSerializer
+from .filters import PerfilFilter
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.core.mail import send_mail
@@ -8,6 +10,7 @@ from rest_framework import status
 from rest_framework.response import Response
 from django.core.mail import send_mail
 from utils.viewset.potas_view import PotasViewSet
+from rest_framework.views import APIView
 
 class ChoiceProjectView(ModelViewSet):
     queryset = ChoiceProject.objects.all()
@@ -17,19 +20,55 @@ class PerfilView(ModelViewSet):
     queryset = Perfil.objects.all()
     serializer_class = PerfilSerializer
 
-    @receiver(post_save, sender=Perfil)
-    def sendEmailUpdate(sender, instance, created, **kwargs):
-        message = "Seu perfil foi alterado"
-        subject = f"Olá {instance.user.name}!, seu perfil sofreu algumas alterações!"
-        recipient_list = [instance.user.email]
-        from_email = "martinsbarroskaua85@gmail.com"
-        if not created:
-            send_mail(
-                message=message,
-                subject=subject,
-                recipient_list=recipient_list,
-                from_email=from_email
+class PerfilUpdateCollectIdAPIView(APIView):
+    def patch(self, request):
+        # Obtendo parâmetros da requisição
+        email = request.query_params.get('email')
+        collector_id = request.data.get('collector_id')
+        refresh_token = request.data.get("refresh_token")
+        access_token = request.data.get('access_token')
+        expiration_date_access_token = request.data.get('expiration_date_access_token')
+        expiration_date_refresh_token = request.data.get('expiration_date_refresh_token')
+
+        missing_fields = []
+        if not email:
+            missing_fields.append('email')
+        if not collector_id:
+            missing_fields.append('collector_id')
+        if not refresh_token:
+            missing_fields.append('refresh_token')
+        if not access_token:
+            missing_fields.append('access_token')
+        if not expiration_date_access_token:
+            missing_fields.append('expiration_date_access_token')
+        if not expiration_date_refresh_token:
+            missing_fields.append('expiration_date_refresh_token')
+
+        if missing_fields:
+            return Response(
+                {"message": f"Campos obrigatórios ausentes: {', '.join(missing_fields)}"},
+                status=status.HTTP_400_BAD_REQUEST
             )
+
+        perfil = Perfil.objects.filter(user__email=email).first()
+        if not perfil:
+            return Response({'message': 'O email não procede'}, status=status.HTTP_404_NOT_FOUND)
+
+        perfil.collector_id_mercado_pago = collector_id
+        perfil.refresh_token_mercado_pago = refresh_token
+        perfil.access_token_mercado_pago = access_token
+        perfil.expiration_date_access_token_mercado_pago = expiration_date_access_token
+        perfil.expiration_date_refresh_token_mercado_pago = expiration_date_refresh_token
+        perfil.save()
+
+        return Response({'message': "Perfil atualizado com sucesso"}, status=status.HTTP_200_OK)
+    
+class PerfilCurrentUserView(ModelViewSet):
+    queryset = Perfil.objects.all()
+    serializer_class = PerfilCurrentUserSerializer
+    filter_backends = [DjangoFilterBackend]
+    filterset_class = PerfilFilter
+    
 class ProView(ModelViewSet):
     queryset = Pro.objects.all()
     serializer_class = ProSerializer
@@ -49,6 +88,7 @@ class SubAreaView(ModelViewSet):
 class HabilityView(ModelViewSet):
     queryset = Hability.objects.all()
     serializer_class = HabilitySerializer
+
 class MyProjectsView(PotasViewSet):
     queryset = MyProjects.objects.all()
     serializer_class = MyProjectSerializer

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Proposal Accepted Notification</title>
+</head>
+<body>
+  <div class="container" style="background-color: #ffffff; padding: 20px; border-radius: 10px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); text-align: center; max-width: 1000px; width: 100%;">
+
+    <h1 style="font-size: 2rem; color: #333333; margin-bottom: 25px;">
+      Hi, {{ name }} sending a new proposal to you!
+    </h1>
+
+    <div style="font-size: 1.2rem; color: #666666; margin-bottom: 25px;">
+        <span class="value" style="margin-left: 10px">Value: ${{ value }}</span>
+        <span class="delivery" style="margin-left: 10px"> Delivery: {{ delivery }}
+    </div>
+    <div style="margin-bottom: 25px;">
+      <a href="https://tasker.yourplatform.com/login" style="text-decoration: none;">
+        <button id="redirectBtn" style="padding: 10px 20px; font-size: 1rem; background-color: #4caf50; color: #ffffff; border: none; border-radius: 5px; cursor: pointer; transition: background-color 0.3s ease;">
+          Access this url for accept proposal 
+        </button>
+      </a>
+    </div>
+
+    <hr style="margin-top: 25px; background-color: black; height: 1px; border: none;">
+    <p style="color: #666666; font-size: 0.9rem; margin-top: 20px;">
+      If you have any questions, feel free to contact us at support@tasker.yourplatform.com
+    </p>
+  </div>
+</body>
+</html>
