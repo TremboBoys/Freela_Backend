@@ -109,21 +109,15 @@ class TransactionAPIView(APIView):
         print(data.get('payer'))
         print(data.get('service_id'))
         print(data)
-        if 'service_id' in data:
-            print('Mia Khalifa')
-        else:
-            print('Elle broke')
-        # Verificar o campo 'email_payer'
+        
         if not data.get('payer') or not data['payer'].get('email'):
             return Response({"error": "O campo 'email_payer' é obrigatório."}, status=status.HTTP_400_BAD_REQUEST)
         
         try:
-            # Buscar o usuário com base no email do pagador
             user = Address.objects.filter(perfil__user__email=data['payer']['email']).first()
             if not user:
                 return Response({"error": "Usuário não encontrado com o email fornecido."}, status=status.HTTP_404_NOT_FOUND)
             
-            # Caso haja 'project_id' no corpo da requisição
             if 'project_id' in data:
                 project = AcceptProposal.objects.filter(proposal__pk=data['project_id']).first()
                 if not project:
@@ -136,12 +130,11 @@ class TransactionAPIView(APIView):
                     accept_proposal=project,
                     amount=data['transaction_amount'],
                     method=data['payment_method_id'],
-                    number=data.get('number')  # Adicionando 'number' de forma segura
+                    number=data.get('number')  
                 )
                 transaction.save()
                 return Response(self.prepare_response(data, response), status=status.HTTP_201_CREATED)
             
-            # Caso haja 'service_id' no corpo da requisição
             elif 'service_id' in data:
                 service_type = data.get('service_id')
                 print(service_type, user.perfil)

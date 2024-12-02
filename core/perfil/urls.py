@@ -1,6 +1,6 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-from core.perfil.views import PerfilView, PerfilCurrentUserView, ProView, AreaView, SubAreaView, HabilityView, MyProjectsView, NacionalityView, MyCompetencyView, ChoiceProjectView
+from core.perfil.views import PerfilView, PerfilCurrentUserView, ProView, AreaView, SubAreaView, HabilityView, MyProjectsView, NacionalityView, MyCompetencyView, ChoiceProjectView, PerfilUpdateCollectIdAPIView
 
 router = DefaultRouter()
 router.register(r"perfil", PerfilView, basename="perfil")
@@ -16,5 +16,6 @@ router.register(r"choiceProject", ChoiceProjectView, basename="choiceProject")
 
 
 urlpatterns = [
-    path("", include(router.urls))
+    path("", include(router.urls)),
+    path("perfil_mercado", PerfilUpdateCollectIdAPIView.as_view(), name="perfil_mercado_pago")
 ]

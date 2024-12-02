@@ -10,6 +10,7 @@ from rest_framework import status
 from rest_framework.response import Response
 from django.core.mail import send_mail
 from utils.viewset.potas_view import PotasViewSet
+from rest_framework.views import APIView
 
 class ChoiceProjectView(ModelViewSet):
     queryset = ChoiceProject.objects.all()
@@ -18,7 +19,30 @@ class ChoiceProjectView(ModelViewSet):
 class PerfilView(ModelViewSet):
     queryset = Perfil.objects.all()
     serializer_class = PerfilSerializer
-
+    
+class PerfilUpdateCollectIdAPIView(APIView):
+    def patch(self, request):
+        email = request.query_params.get('email')
+        collector_id = request.data.get('collector_id')
+        refresh_token = request.data.get("refresh_token")
+        access_token = request.data.get('access_token')
+        expiration_date_access_token = request.data.get('expiration_date_access_token')
+        expiration_data_refresh_token = request.data.get('expiration_date_refresh_token')
+        
+    
+        if not email or not collector_id or not refresh_token or not access_token or expiration_data_refresh_token or not expiration_date_access_token: 
+            return Response({"message": "Email is required"}, status=status.HTTP_400_BAD_REQUEST)
+        perfil = Perfil.objects.filter(email=email).first()
+        if not perfil:
+            return Response({'message': 'O email não procede'}, status=status.HTTP_404_NOT_FOUND)
+        
+        perfil.collector_id_mercado_pago = collector_id
+        perfil.refresh_token_mercado_pago = refresh_token
+        perfil.access_token_mercado_pago = access_token
+        perfil.expiration_date_access_token_mercado_pago = expiration_date_access_token
+        perfil.expiration_date_refresh_token_mercado_pago = expiration_data_refresh_token
+        perfil.save()
+        return Response({'message': "Perfil update"}, status=status.HTTP_200_OK)
 class PerfilCurrentUserView(ModelViewSet):
     queryset = Perfil.objects.all()
     serializer_class = PerfilCurrentUserSerializer
