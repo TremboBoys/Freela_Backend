@@ -17,5 +17,5 @@ router.register(r"choiceProject", ChoiceProjectView, basename="choiceProject")
 
 urlpatterns = [
     path("", include(router.urls)),
-    path("perfil_mercado", PerfilUpdateCollectIdAPIView.as_view(), name="perfil_mercado_pago")
+    path("perfil_mercado/", PerfilUpdateCollectIdAPIView.as_view(), name="perfil_mercado_pago")
 ]
