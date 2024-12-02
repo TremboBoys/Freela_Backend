@@ -31,9 +31,15 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'requests',
+    'uploader',
+    'django_filters',
+    'cloudinary_storage',
     'rest_framework',  
     'corsheaders',     
     'simplejwt',
+    'reportlab',
+    'cloudinary',
     'core.pay',
     'core.user',
     'core.perfil',
@@ -42,12 +48,6 @@ INSTALLED_APPS = [
     'core.report',
     'core.service',
     'core.ads',
-    'reportlab',
-    'cloudinary',
-    'requests',
-    'uploader',
-    'django_filters',
-    'cloudinary_storage',
     
 ]
 

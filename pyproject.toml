@@ -25,8 +25,9 @@ dependencies = [
     "psycopg2-binary>=2.9.10",
     "dj-database-url>=2.3.0",
     "gunicorn>=23.0.0",
-
+    "python-magic>=0.4.27",
 ]
+
 requires-python = "==3.11.*"
 readme = "README.md"
 license = {text = "MIT"}

@@ -10,7 +10,7 @@ router.register("images", views.ImageUploadViewSet)
 router.register("documents", views.DocumentUploadViewSet)
 
 urlpatterns = [
-    path("", include(router.urls))
+    path("", include(router.urls)),
 ]
 
 
