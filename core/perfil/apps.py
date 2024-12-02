@@ -7,3 +7,4 @@ class PerfilConfig(AppConfig):
 
     def ready(self) -> None:
         import core.perfil.signals.email_update
+        import core.perfil.signals.avaliations

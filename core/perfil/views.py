@@ -11,6 +11,8 @@ from rest_framework.response import Response
 from django.core.mail import send_mail
 from utils.viewset.potas_view import PotasViewSet
 from rest_framework.views import APIView
+from core.perfil.models import PerfilAvaliation
+from core.perfil.serializer import PerfilAvaliationSerializer
 
 class ChoiceProjectView(ModelViewSet):
     queryset = ChoiceProject.objects.all()
@@ -130,4 +132,7 @@ class MyCompetencyView(ModelViewSet):
         serializer = self.get_serializer(querset, many=True)
         
         return Response(serializer.data, status=status.HTTP_200_OK)
-
+    
+class PerfilAvaliationViewSet(ModelViewSet):
+    queryset = PerfilAvaliation.objects.all()
+    serializer_class = PerfilAvaliationSerializer

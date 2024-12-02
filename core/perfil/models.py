@@ -1,5 +1,6 @@
 from core.user.models import User
-from django.db import models
+from django.db import models    
+from django.db.models import Sum, Avg
 from core.project.models import Project
 from uploader.models.document import Document
 from uploader.models.image import Image
@@ -46,11 +47,12 @@ class Perfil(models.Model):
     expiration_date_access_token_mercado_pago = models.CharField(max_length=255, null=True, blank=True)
     expiration_date_refresh_token_mercado_pago = models.CharField(max_length=255, null=True, blank=True)
     collector_id_mercado_pago = models.CharField(max_length=255, null=True, blank=True)
-    
+    avaliation = models.IntegerField(null=True, blank=True)
+    every_avaliations = models.IntegerField(null=True, blank=True)
+
     
     def __str__(self) -> str:
         return f"{self.about_me} - {self.balance}"
-    
 class MyCompetency(models.Model):
     perfil = models.ForeignKey(Perfil, on_delete=models.CASCADE)
     my_hability = models.ForeignKey(Hability, on_delete=models.CASCADE)
@@ -75,3 +77,17 @@ class Pro(models.Model):
 class ChoiceProject(models.Model):
     perfil = models.ForeignKey(Perfil, on_delete=models.CASCADE)
     project = models.ForeignKey(MyProjects, on_delete=models.CASCADE)
+    
+class PerfilAvaliation(models.Model):
+    perfil_avaliator = models.ForeignKey(
+        Perfil, 
+        on_delete=models.CASCADE, 
+        related_name='given_evaluations' 
+    )
+    perfil_receiver = models.ForeignKey(
+        Perfil, 
+        on_delete=models.CASCADE, 
+        related_name='received_evaluations'  
+    )
+    star_number = models.IntegerField()
+   
