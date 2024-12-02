@@ -153,7 +153,6 @@ class TransactionAPIView(APIView):
                 del data['service_id']
                 return Response(self.prepare_response(data, response), status=status.HTTP_201_CREATED)
             
-            # Caso haja 'ads_id' no corpo da requisição
             elif 'ads_id' in data:
                 ads = Ads.objects.filter(pk=data['ads_id']).first()
                 if not ads:
