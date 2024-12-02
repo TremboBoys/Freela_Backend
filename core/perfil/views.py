@@ -50,7 +50,7 @@ class PerfilUpdateCollectIdAPIView(APIView):
                 status=status.HTTP_400_BAD_REQUEST
             )
 
-        perfil = Perfil.objects.filter(email=email).first()
+        perfil = Perfil.objects.filter(user__email=email).first()
         if not perfil:
             return Response({'message': 'O email não procede'}, status=status.HTTP_404_NOT_FOUND)
 
