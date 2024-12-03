@@ -240,7 +240,7 @@ class TransactionAPIView(APIView):
                         "number": payer_data['identification']['number']
                     }
                 },
-                "token": access_token
+                "access_token": access_token
             }
             
             print("JSON para requisição:", request_json)
