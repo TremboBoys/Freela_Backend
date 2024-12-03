@@ -107,10 +107,6 @@ class TransactionAPIView(APIView):
     def post(self, request, *args, **kwargs):
         data = request.data
         
-        print(data.get('payer', {}).get('email'))
-        print(data.get('service_id'))
-        print(data)
-        
         payer_email = data.get('payer', {}).get('email')
         if not payer_email:
             return Response({"error": "O campo 'email_payer' é obrigatório."}, status=status.HTTP_400_BAD_REQUEST)
@@ -218,10 +214,6 @@ class TransactionAPIView(APIView):
             if not access_token:
                 raise ValueError("O 'access_token' é obrigatório.")
             
-            print(payer_data['email'])
-            print(payer_data.get('email'))
-            print(payer_data.get('identification', {}).get('type'))
-
             if not payer_data.get('email') or not payer_data.get('identification', {}).get('type') or not payer_data.get('identification', {}).get('number'):
                 raise ValueError("Dados incompletos do 'payer': 'email', 'type' e 'number' são obrigatórios.")
             

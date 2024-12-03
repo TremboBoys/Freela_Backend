@@ -1,8 +1,10 @@
-from rest_framework.serializers import ModelSerializer
+from rest_framework.serializers import ModelSerializer, SerializerMethodField
 from rest_framework import serializers
 from core.perfil.models import Perfil, Hability, Nacionality, Area, SubArea, MyProjects, MyCompetency, Pro, ChoiceProject, PerfilAvaliation
 from core.user.models import User
 from uploader.serializers.image import ImageSerializer
+from core.project.models import Project
+
 
 class UserNestedSerializer(ModelSerializer):
     class Meta:
@@ -55,9 +57,14 @@ class ChoiceProjectSerializer(ModelSerializer):
         model = ChoiceProject
         fields = "__all__" 
 class PerfilSerializer(ModelSerializer):
+    projects_in_execution = SerializerMethodField()
     class Meta:
         model = Perfil
         fields = "__all__"
+        
+    def get_projects_in_execution(self, obj):
+        projects = Project.objects.filter(perfil=obj, in_execution=True)
+        return len(projects)
         
 class PerfilAvaliationSerializer(ModelSerializer):
     class Meta:
