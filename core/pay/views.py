@@ -218,7 +218,7 @@ class TransactionAPIView(APIView):
         print("Estou sendo chamado!")
         try:
             payer_data = data.get('payer', {})
-            access_token = data.get('access_token')
+            access_token = data.get('token')
             
             if not access_token:
                 raise ValueError("O 'access_token' é obrigatório.")
@@ -240,7 +240,7 @@ class TransactionAPIView(APIView):
                         "number": payer_data['identification']['number']
                     }
                 },
-                "access_token": access_token
+                "token": access_token
             }
             
             print("JSON para requisição:", request_json)
