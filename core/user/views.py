@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from django.contrib.auth.hashers import make_password
 from core.user.models import User, EmailVerification
-#from core.user.permissions import freelancer_group, contratante
+from core.user.permissions import freelancer_group, contratante
 from core.user.use_case.validation import validate
 from core.user.serializer import UserSerializer
 from django.core.mail import EmailMultiAlternatives

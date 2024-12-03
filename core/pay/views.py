@@ -138,12 +138,8 @@ class TransactionAPIView(APIView):
             
             elif 'service_id' in data:
                 service_type = data['service_id']
-                print(f"Data: {data}")
-                print(f"Service_type: {service_type}")
                 service = ContractService.objects.create(type_of_service=service_type, contractor=user.perfil)
-                print(f"Service: {service}")
                 response = self.create_pix_transaction(data)
-                print("Response: ", response)
                 transaction = Transaction.objects.create(
                     id_transaction=response['id_transaction'],
                     user=user.perfil,
@@ -152,7 +148,6 @@ class TransactionAPIView(APIView):
                     method=data['payment_method_id'],
                     number=data.get('number')
                 )
-                print(f"Transaction: {transaction}")
                 return Response(self.prepare_response(data, response), status=status.HTTP_201_CREATED)
             
             elif 'ads_id' in data:
@@ -242,10 +237,10 @@ class TransactionAPIView(APIView):
                 },
                 "access_token": access_token
             }
-            
             print("JSON para requisição:", request_json)
             
             response = requests.post(f"{urlpix}/transaction", json=request_json)
+            print(response)
             response.raise_for_status()
             return response.json()
         except requests.RequestException as e:
