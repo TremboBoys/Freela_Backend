@@ -10,12 +10,11 @@ from core.report.models import Report
 from core.pay.models import Address
 from core.pay.use_case.pix import create_transaction
 from core.report.models import Report
+
 class ProjectView(ProjectModelViewSet):
     queryset = Project.objects.all()
     serializer_class = ProjectSerializer
     
-    
-
 class FinishedProjectAPIView(APIView):
     def patch(self, request):
         objeto = request.query_params.get('objeto')

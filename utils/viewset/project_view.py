@@ -3,7 +3,8 @@ from utils.mixins.create_project import CreateServiceModelMixin
 from rest_framework.viewsets import GenericViewSet
 
 class ProjectModelViewSet(
-                        CreateServiceModelMixin,
+                        #CreateServiceModelMixin,
+                        mixins.CreateModelMixin,
                         mixins.RetrieveModelMixin,
                         mixins.ListModelMixin,
                         mixins.UpdateModelMixin,

@@ -51,6 +51,7 @@ class Project(models.Model):
         PEDING = 2, "It project is pending"
         FINISHED = 3, "It project is finished"
     status = models.IntegerField(("Status of the project"), choices=Status.choices, default=Status.NOT_STARTED)
+    response_ai = models.CharField(max_length=255, null=True, blank=True)
 class ProjectIntegration(models.Model):
     project = models.ForeignKey(Project, on_delete=models.PROTECT)
     integration = models.ForeignKey(IntegrationType, on_delete=models.PROTECT)
