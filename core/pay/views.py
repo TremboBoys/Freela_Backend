@@ -106,15 +106,17 @@ class AddressAPIView(APIView):
 class TransactionAPIView(APIView):
     def post(self, request, *args, **kwargs):
         data = request.data
-        print(data.get('payer'))
+        
+        print(data.get('payer', {}).get('email'))
         print(data.get('service_id'))
         print(data)
         
-        if not data.get('payer') or not data['payer'].get('email'):
+        payer_email = data.get('payer', {}).get('email')
+        if not payer_email:
             return Response({"error": "O campo 'email_payer' é obrigatório."}, status=status.HTTP_400_BAD_REQUEST)
         
         try:
-            user = Address.objects.filter(perfil__user__email=data['payer']['email']).first()
+            user = Address.objects.filter(perfil__user__email=payer_email).first()
             if not user:
                 return Response({"error": "Usuário não encontrado com o email fornecido."}, status=status.HTTP_404_NOT_FOUND)
             
@@ -123,24 +125,25 @@ class TransactionAPIView(APIView):
                 if not project:
                     return Response({"error": "Proposta não encontrada para o projeto fornecido."}, status=status.HTTP_404_NOT_FOUND)
                 
-                response = self.create_pix_transaction(data)
+                response = self.create_pix_transaction(data, user.perfil.access_token_mercado_pago)
                 transaction = Transaction.objects.create(
                     id_transaction=response['id_transaction'],
                     user=user.perfil,
                     accept_proposal=project,
                     amount=data['transaction_amount'],
                     method=data['payment_method_id'],
-                    number=data.get('number')  
+                    number=data.get('number')
                 )
-                transaction.save()
                 return Response(self.prepare_response(data, response), status=status.HTTP_201_CREATED)
             
             elif 'service_id' in data:
-                service_type = data.get('service_id')
-                print(service_type, user.perfil)
+                service_type = data['service_id']
+                print(f"Data: {data}")
+                print(f"Service_type: {service_type}")
                 service = ContractService.objects.create(type_of_service=service_type, contractor=user.perfil)
-                service.save()
+                print(f"Service: {service}")
                 response = self.create_pix_transaction(data)
+                print("Response: ", response)
                 transaction = Transaction.objects.create(
                     id_transaction=response['id_transaction'],
                     user=user.perfil,
@@ -149,15 +152,14 @@ class TransactionAPIView(APIView):
                     method=data['payment_method_id'],
                     number=data.get('number')
                 )
-                transaction.save()
-                del data['service_id']
+                print(f"Transaction: {transaction}")
                 return Response(self.prepare_response(data, response), status=status.HTTP_201_CREATED)
             
             elif 'ads_id' in data:
                 ads = Ads.objects.filter(pk=data['ads_id']).first()
                 if not ads:
                     return Response({"error": "Anúncio não encontrado para o ID fornecido."}, status=status.HTTP_404_NOT_FOUND)
-
+                
                 response = self.create_pix_transaction(data)
                 transaction = Transaction.objects.create(
                     id_transaction=response['id_transaction'],
@@ -167,8 +169,8 @@ class TransactionAPIView(APIView):
                     method=data['payment_method_id'],
                     number=data.get('number')
                 )
-                transaction.save()
                 return Response(self.prepare_response(data, response), status=status.HTTP_201_CREATED)
+            
             else:
                 return Response({"error": "Nenhum identificador válido (project_id, service_id ou ads_id) foi fornecido."}, status=status.HTTP_400_BAD_REQUEST)
         
@@ -181,11 +183,11 @@ class TransactionAPIView(APIView):
         status_accredited = request.data.get('status_accredited')
         
         if not id_transaction or not status_approved or not status_accredited:
-            return Response({"message": "Você não me forneceu todos os dados que eu precisava"}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({"message": "Você não me forneceu todos os dados necessários."}, status=status.HTTP_400_BAD_REQUEST)
         
         transaction = Transaction.objects.filter(id_transaction=id_transaction).first()
         if not transaction:
-            return Response({"message": "A transacção não procede"},status=status.HTTP_404_NOT_FOUND)
+            return Response({"message": "A transação não procede."}, status=status.HTTP_404_NOT_FOUND)
          
         if status_approved == "approved" or status_accredited == "accredited":   
             if transaction.accept_proposal is not None:
@@ -193,34 +195,66 @@ class TransactionAPIView(APIView):
                 transaction.accept_proposal.proposal.project.status = 3
                 transaction.accept_proposal.proposal.perfil.balance += transaction.amount
                 my_projects = MyProjects.objects.get(project=transaction.accept_proposal.proposal.project)
-                my_projects.in_execution == False
+                my_projects.in_execution = False
                 my_projects.save()
                 transaction.accept_proposal.proposal.project.save()
                 transaction.accept_proposal.proposal.perfil.save()
                 
-    
             elif transaction.service is not None:
                 transaction.is_paid = True
                 transaction.service.is_paid = True
-                transaction.perfil.is_pro = True
+                transaction.user.is_pro = True
                 transaction.service.save()
-                transaction.perfil.save()
+                transaction.user.save()
             elif transaction.ads is not None:
                 transaction.is_paid = True
                 transaction.ads.is_paid = True
                 transaction.ads.save()
-                transaction.save()
                 
-            return Response({"message": "Payment saved"}, status=status.HTTP_200_OK)
+            transaction.save()
+            return Response({"message": "Pagamento salvo com sucesso."}, status=status.HTTP_200_OK)
 
     def create_pix_transaction(self, data):
+        print("Estou sendo chamado!")
         try:
+            payer_data = data.get('payer', {})
+            access_token = data.get('access_token')
             
-            response = requests.post(f"{urlpix}/transaction", json=data)
+            if not access_token:
+                raise ValueError("O 'access_token' é obrigatório.")
+            
+            print(payer_data['email'])
+            print(payer_data.get('email'))
+            print(payer_data.get('identification', {}).get('type'))
+
+            if not payer_data.get('email') or not payer_data.get('identification', {}).get('type') or not payer_data.get('identification', {}).get('number'):
+                raise ValueError("Dados incompletos do 'payer': 'email', 'type' e 'number' são obrigatórios.")
+            
+            request_json = {
+                "transaction_amount": data.get('transaction_amount'),
+                "payment_method_id": data.get('payment_method_id'),
+                "payer": {
+                    "email": payer_data['email'],
+                    "identification": {
+                        "type": payer_data['identification']['type'],
+                        "number": payer_data['identification']['number']
+                    }
+                },
+                "access_token": access_token
+            }
+            
+            print("JSON para requisição:", request_json)
+            
+            response = requests.post(f"{urlpix}/transaction", json=request_json)
             response.raise_for_status()
             return response.json()
         except requests.RequestException as e:
-            raise ValueError(f"Erro ao criar transação PIX: {e}")
+            raise ValueError(f"Erro na requisição ao PIX: {str(e)}")
+        except ValueError as e:
+            raise ValueError(f"Erro de validação: {str(e)}")
+        except Exception as e:
+            raise ValueError(f"Erro inesperado: {str(e)}")
+
     
     def prepare_response(self, data, response):
         if data['payment_method_id'] == "pix":

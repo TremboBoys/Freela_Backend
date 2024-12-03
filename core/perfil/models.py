@@ -49,10 +49,15 @@ class Perfil(models.Model):
     collector_id_mercado_pago = models.CharField(max_length=255, null=True, blank=True)
     avaliation = models.IntegerField(null=True, blank=True)
     every_avaliations = models.IntegerField(null=True, blank=True)
-
     
     def __str__(self) -> str:
         return f"{self.about_me} - {self.balance}"
+    
+    @property
+    def in_execution(self):
+        my_projects = self.my_projects.filter(in_execution=True)
+        self.number_projects_in_execution = my_projects.count()
+        return self.number_projects_in_execution > 0
 class MyCompetency(models.Model):
     perfil = models.ForeignKey(Perfil, on_delete=models.CASCADE)
     my_hability = models.ForeignKey(Hability, on_delete=models.CASCADE)
