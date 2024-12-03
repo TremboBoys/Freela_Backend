@@ -1,26 +1,9 @@
 from io import StringIO
-from typing import Any
 import uuid
 from django.db import models
 from cloudinary.uploader import upload
 from cloudinary.utils import cloudinary_url
 import cloudinary
-from django.core.management.base import BaseCommand
-import os, platform
-
-class SystemOps(BaseCommand):
-    def handle(self, *args: Any, **options: Any) -> str | None:
-        os_name = os.name
-        platform_system = platform.system()
-        platform_details = platform.platform()
-        return {
-            "os_name": os_name,
-            "plataform_system": platform_system,
-            "plataform_details": platform_details
-        }
-        
-print(SystemOps().handle()['os_name'])
-        
         
 cloudinary.config(
     cloud_name="dm2odcrnf",
