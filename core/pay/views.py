@@ -135,7 +135,7 @@ class TransactionAPIView(APIView):
             elif 'service_id' in data:
                 service_type = data['service_id']
                 service = ContractService.objects.create(type_of_service=service_type, contractor=user.perfil)
-                response = self.create_pix_transaction(data)
+                response = self.create_pix_transaction(data, perfil=user.perfil)
                 transaction = Transaction.objects.create(
                     id_transaction=response['id_transaction'],
                     user=user.perfil,
@@ -205,15 +205,10 @@ class TransactionAPIView(APIView):
             transaction.save()
             return Response({"message": "Pagamento salvo com sucesso."}, status=status.HTTP_200_OK)
 
-    def create_pix_transaction(self, data):
+    def create_pix_transaction(self, data, perfil):
         print("Estou sendo chamado!")
         try:
-            payer_data = data.get('payer', {})
-            access_token = data.get('token')
-            
-            if not access_token:
-                raise ValueError("O 'access_token' é obrigatório.")
-            
+            payer_data = data.get('payer', {})            
             if not payer_data.get('email') or not payer_data.get('identification', {}).get('type') or not payer_data.get('identification', {}).get('number'):
                 raise ValueError("Dados incompletos do 'payer': 'email', 'type' e 'number' são obrigatórios.")
             
@@ -227,7 +222,7 @@ class TransactionAPIView(APIView):
                         "number": payer_data['identification']['number']
                     }
                 },
-                "access_token": access_token
+                "access_token": perfil.access_token
             }
             print("JSON para requisição:", request_json)
             

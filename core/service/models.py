@@ -17,4 +17,3 @@ class ContractService(models.Model):
         if now() - self.created_at == 30 and self.is_paid == True:
             self.is_paid = False
             self.save()
-       
