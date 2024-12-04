@@ -4,6 +4,7 @@ from core.perfil.models import Perfil, Hability, Nacionality, Area, SubArea, MyP
 from core.user.models import User
 from uploader.serializers.image import ImageSerializer
 from core.project.models import Project
+from core.proposal.models import AcceptProposal
 
 
 class UserNestedSerializer(ModelSerializer):
@@ -63,7 +64,8 @@ class PerfilSerializer(ModelSerializer):
         fields = "__all__"
         
     def get_projects_in_execution(self, obj):
-        projects = Project.objects.filter(perfil=obj, in_execution=True)
+        print(obj)
+        projects = AcceptProposal.objects.filter(proposal__perfil=obj, proposal__project__in_execution=True)
         return len(projects)
         
 class PerfilAvaliationSerializer(ModelSerializer):
