@@ -5,6 +5,8 @@ from core.user.models import User
 from uploader.serializers.image import ImageSerializer
 from core.project.models import Project
 from core.proposal.models import AcceptProposal
+from cloudinary.utils import cloudinary_url
+
 
 
 class UserNestedSerializer(ModelSerializer):
@@ -19,10 +21,22 @@ class PerfilSerializer(ModelSerializer):
         fields = ['balance', 'is_public', 'user', 'price_per_hour', 'nacionality', 'photo', 'payment_type', 'about_me', 'area', 'sub_area']
         depth = 1    
 class PerfilCurrentUserSerializer(ModelSerializer):
+    projects_in_execution = SerializerMethodField()
+    url_image = SerializerMethodField()
     class Meta:
         model = Perfil
         fields = "__all__"
-        depth = 1
+        depth = 2
+        
+    def get_projects_in_execution(self, obj):
+        projects = AcceptProposal.objects.filter(proposal__perfil=obj, proposal__project__in_execution=True)
+        return len(projects)
+    
+    def get_url_image(self, obj):
+        if obj.image_perfil and obj.image_perfil.public_id:
+            url, _ = cloudinary_url(obj.image_perfil.public_id)
+            return url
+        return None
 class NacionalitySerializer(ModelSerializer):
     class Meta:
         model = Nacionality
@@ -59,14 +73,22 @@ class ChoiceProjectSerializer(ModelSerializer):
         fields = "__all__" 
 class PerfilSerializer(ModelSerializer):
     projects_in_execution = SerializerMethodField()
+    url_image = SerializerMethodField()
     class Meta:
         model = Perfil
         fields = "__all__"
+        depth = 1
         
     def get_projects_in_execution(self, obj):
         print(obj)
         projects = AcceptProposal.objects.filter(proposal__perfil=obj, proposal__project__in_execution=True)
         return len(projects)
+        
+    def get_url_image(self, obj):
+        if obj.image_perfil and obj.image_perfil.public_id:
+            url, _ = cloudinary_url(obj.image_perfil.public_id)
+            return url
+        return None
         
 class PerfilAvaliationSerializer(ModelSerializer):
     class Meta:

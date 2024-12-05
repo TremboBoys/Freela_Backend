@@ -222,7 +222,7 @@ class TransactionAPIView(APIView):
                         "number": payer_data['identification']['number']
                     }
                 },
-                "access_token": perfil.access_token
+                "access_token": perfil.access_token_mercado_pago
             }
             print("JSON para requisição:", request_json)
             
@@ -245,3 +245,17 @@ class TransactionAPIView(APIView):
                 "pix_copia_cola": response.get('pix_copia_cola')
             }
         return {"message": "Transação criada com sucesso."}
+
+class PayAPIView(APIView):
+    def post(self, request):
+        transaction_amount = request.data.get('transaction_amount')
+        email = request.data.get("payer", {}).get("email")
+        cpf = request.data.get("payer", {}).get("identification", {}).get("number")
+        type_number = request.data.get("payer", {}).get("identification", {}).get("number")
+        transaction_amount = request.data.get("transaction_amount")
+        payment_method_id = request.data.get("payment_method_id")
+        service_id = request.data.get("service_id")
+        project_id = request.data.get('project_id')
+        pass
+        
+        
