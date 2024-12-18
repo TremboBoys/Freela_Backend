@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from django.contrib.auth.hashers import make_password
 from core.user.models import User, EmailVerification
-from core.user.permissions import freelancer_group, contratante
+#from core.user.permissions import freelancer_group, contratante
 from core.user.use_case.validation import validate
 from core.user.serializer import UserSerializer
 from django.core.mail import EmailMultiAlternatives
@@ -68,7 +68,7 @@ class UserAPIView(APIView):
                 username=username, 
                 type_user = user_type_value
             )   
-            user.groups.add(user_type_value)            
+            #user.groups.add(user_type_value)            
             user.save()
             return Response(UserSerializer(user).data, status=status.HTTP_201_CREATED)
         except Exception as error:
@@ -128,7 +128,7 @@ class UserAPIView(APIView):
                 return Response({"message": f"Error update user: {str(error)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
             message = "Updated user type!"
-        elif update_type == "email":
+        """elif update_type == "email":
             newEmail = request.data.get('email')
             
             if not newEmail:
@@ -142,7 +142,7 @@ class UserAPIView(APIView):
             
             message = "Updated email!"
 
-        return Response({"message": message}, status=status.HTTP_200_OK)
+        return Response({"message": message}, status=status.HTTP_200_OK)"""
     
 
             

@@ -89,7 +89,7 @@ WSGI_APPLICATION = 'config.wsgi.application'
 
 DATABASES = {
     'default': dj_database_url.config(
-        default='postgresql://hackathon_k28t_user:N9FeBvPjSnde453f8FpWM0fP0caB2pb7@dpg-csrpe6bv2p9s73bg0c2g-a.ohio-postgres.render.com/hackathon_k28t',
+        default='postgresql://freela_postgres_user:PMDJq5LwKngrE5WC2Ojv5Z6l5lImSVxz@dpg-cthc9drgbbvc73a59kjg-a.oregon-postgres.render.com/freela_postgres',
         conn_max_age=600,
         ssl_require=True
     )
